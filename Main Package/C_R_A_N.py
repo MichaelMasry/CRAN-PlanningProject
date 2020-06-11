@@ -8,7 +8,7 @@ users = 100
 dimension = 40
 rrh_x = np.array([16, 15, 7, 27, 38, 9])
 rrh_y = np.array([19, 38, 35, 21, 1, 0])
-
+gamma=np.zeros(dimension,6)
 
 def crossover(part1, part2, position):
     child1 = np.concatenate((part1[0:position], part2[position:]))
@@ -26,9 +26,16 @@ def map_40_by_40():
 
 
 def distancebetweenpoints(ran_x, ran_y):
-    x1,x2=x[0],x[1]
-    y1,y2=y[0],y[1]
-    dist = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    for i in range(users):
+        distancehelper=np.zeros(6)
+        for j in range(6):
+            x1,x2=ran_x[i],rrh_x[j]
+            y1,y2=ran_y[i],rrh_y[j]
+            dist = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+            distancehelper[j]=dist
+        whichrrh= distancehelper.index(min(distancehelper))
+        gamma[i,whichrrh]=1
+
     return dist
 
 
