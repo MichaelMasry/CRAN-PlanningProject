@@ -34,13 +34,11 @@ C = 180000 * mth.log2(1+mth.pow(10, (S/N/10)))
 # Number of RBs
 R = 2000000/C
 # Create Population
-print('Hello Guys')
-print('200OK')
-print ("keemolandz")
+
 
 # random number RRHs variable holders vector
+randomh = np.empty((6,6))
 
-randomh=np.empty((6,6))
 
 def distancebetweenpoints(x,y):
     x1,x2=x[0],x[1]
@@ -52,3 +50,9 @@ def distancebetweenpoints(x,y):
 def fortyxforty():
     if(randomh.)
     MAP=[]
+
+
+def Map():
+    map = np.zeros((40,40))
+    
+
