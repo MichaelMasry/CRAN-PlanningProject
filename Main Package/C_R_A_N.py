@@ -63,7 +63,10 @@ def evaluate(chromosome):
 
 my_map, user_x, user_y = map_40_by_40()
 gamma = distance_between_points(user_x, user_y)
-print(gamma)
-plt.plot(user_x, user_y, 'go')
-plt.plot(rrh_x, rrh_y, 'rx')
+print("Size of Gamma matrix is: ")
+print(np.shape(gamma))
+plt.plot(user_x, user_y, 'gx')
+plt.plot(rrh_x, rrh_y, 'ro')
+plt.title('Users and RRHs Map')
+plt.legend(('Users', 'RRHs'), loc= 1)
 plt.show()
