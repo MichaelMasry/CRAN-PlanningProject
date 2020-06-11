@@ -36,7 +36,7 @@ def distancebetweenpoints(ran_x, ran_y):
         whichrrh= distancehelper.index(min(distancehelper))
         gamma[i,whichrrh]=1
 
-    return dist
+    return gamma
 
 
 def mutate(parent):
