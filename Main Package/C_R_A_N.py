@@ -14,13 +14,13 @@ def crossover(part1, part2, position):
     return child1, child2
 
 
-def map():
+def map_40_by_40():
     map = np.zeros((dimension, dimension))
     ran_x = np.random.randint(0, dimension, users)
     ran_y = np.random.randint(0, dimension, users)
     for i in range(users):
         map[ran_x[i], ran_y[i]] = 1
-    return map
+    return map, ran_x, ran_y
 
 
 def mutate(parent):
