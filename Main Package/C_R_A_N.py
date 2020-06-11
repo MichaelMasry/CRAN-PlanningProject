@@ -26,10 +26,7 @@ def map_40_by_40():
 
 
 def distancebetweenpoints(ran_x, ran_y):
-    x1,x2=x[0],x[1]
-    y1,y2=y[0],y[1]
-    dist = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-    return dist
+    return 0
 
 
 def mutate(parent):
@@ -55,14 +52,3 @@ C = 180000 * mth.log2(1+mth.pow(10, (S/N/10)))
 # Number of RBs
 R = 2000000/C
 # Create Population
-
-
-# random number RRHs variable holders vector
-randomh = np.empty((6,6))
-ran_x = np.random.randint(0, dimension, 6)
-ran_y = np.random.randint(0, dimension, 6)
-print(ran_x)
-print(ran_y)
-
-
-
