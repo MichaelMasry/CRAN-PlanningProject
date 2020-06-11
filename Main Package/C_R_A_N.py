@@ -33,3 +33,4 @@ C = 180000 * mth.log2(1+mth.pow(10, (S/N/10)))
 R = 2000000/C
 # Create Population
 print('Hello Guys')
+print("100")
