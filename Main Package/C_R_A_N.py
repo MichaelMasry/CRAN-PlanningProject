@@ -1,6 +1,8 @@
 # Project
 import numpy as np
 import math as mth
+import random
+
 
 
 def crossover(part1, part2, position):
@@ -35,3 +37,18 @@ R = 2000000/C
 print('Hello Guys')
 print('200OK')
 print ("keemolandz")
+
+# random number RRHs variable holders vector
+
+randomh=np.empty((6,6))
+
+def distancebetweenpoints(x,y):
+    x1,x2=x[0],x[1]
+    y1,y2=y[0],y[1]
+    dist = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    return dist
+
+
+def fortyxforty():
+    if(randomh.)
+    MAP=[]
