@@ -4,11 +4,23 @@ import math as mth
 import random
 
 
+users = 100
+dimension = 40
+
 
 def crossover(part1, part2, position):
     child1 = np.concatenate((part1[0:position], part2[position:]))
     child2 = np.concatenate((part2[0:position], part1[position:]))
     return child1, child2
+
+
+def map():
+    map = np.zeros((dimension, dimension))
+    ran_x = np.random.randint(0, dimension, users)
+    ran_y = np.random.randint(0, dimension, users)
+    for i in range(users):
+        map[ran_x[i], ran_y[i]] = 1
+    return map
 
 
 def mutate(parent):
@@ -25,7 +37,7 @@ def evaluate(chromosome):
     # Fitness Function
     print(chromosome)
 
-map()
+
 # Power per Resource Block
 S = 5 - 10*mth.log10(25) - 20*mth.log10(2350000000) - 10*3*mth.log10(5) + 28 - 6/5
 # Rate per Resource Block
@@ -47,8 +59,5 @@ def distancebetweenpoints(x,y):
     return dist
 
 
-def Map():
-    map = np.zeros((40, 40))
-    ran_x = random.randint(0,40)
-    print(ran_x)
+
 
