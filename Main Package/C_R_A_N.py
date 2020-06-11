@@ -47,12 +47,7 @@ def distancebetweenpoints(x,y):
     return dist
 
 
-def fortyxforty():
-    if(randomh.)
-    MAP=[]
-
-
 def Map():
     map = np.zeros((40,40))
-    
+
 
