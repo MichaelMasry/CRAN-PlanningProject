@@ -4,12 +4,6 @@ import math as mth
 import matplotlib.pyplot as plt
 
 
-users = 100
-dimension = 40
-rrh_x = np.array([16, 15, 7, 27, 38, 9])
-rrh_y = np.array([19, 38, 35, 21, 1, 0])
-
-
 def crossover(part1, part2, position):
     child1 = np.concatenate((part1[0:position], part2[position:]))
     child2 = np.concatenate((part2[0:position], part1[position:]))
@@ -61,6 +55,10 @@ def evaluate(chromosome):
     print(chromosome)
 
 
+users = 100
+dimension = 40
+rrh_x = np.array([16, 15, 7, 27, 38, 9])
+rrh_y = np.array([19, 38, 35, 21, 1, 0])
 my_map, user_x, user_y = map_40_by_40()
 gamma = distance_between_points(user_x, user_y)
 print("Size of Gamma matrix is: ")
