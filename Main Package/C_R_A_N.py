@@ -25,9 +25,9 @@ def evaluate(chromosome):
     # Fitness Function
     print(chromosome)
 
-
+map()
 # Power per Resource Block
-S = 5 - 10*mth.log10(25) - 20*mth.log10(2350000000) - 10*3*mth.log10(''' Distance ''') + 28 - 6/5
+S = 5 - 10*mth.log10(25) - 20*mth.log10(2350000000) - 10*3*mth.log10(5) + 28 - 6/5
 # Rate per Resource Block
 N = -174 + 10 * mth.log10(180000)
 C = 180000 * mth.log2(1+mth.pow(10, (S/N/10)))
@@ -48,6 +48,7 @@ def distancebetweenpoints(x,y):
 
 
 def Map():
-    map = np.zeros((40,40))
-
+    map = np.zeros((40, 40))
+    ran_x = random.randint(0,40)
+    print(ran_x)
 
