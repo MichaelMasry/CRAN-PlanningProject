@@ -6,6 +6,8 @@ import random
 
 users = 100
 dimension = 40
+rrh_x = np.array([16, 15, 7, 27, 38, 9])
+rrh_y = np.array([19, 38, 35, 21, 1, 0])
 
 
 def crossover(part1, part2, position):
@@ -15,12 +17,19 @@ def crossover(part1, part2, position):
 
 
 def map_40_by_40():
-    map = np.zeros((dimension, dimension))
+    my_map = np.zeros((dimension, dimension))
     ran_x = np.random.randint(0, dimension, users)
     ran_y = np.random.randint(0, dimension, users)
     for i in range(users):
-        map[ran_x[i], ran_y[i]] = 1
-    return map, ran_x, ran_y
+        my_map[ran_x[i], ran_y[i]] = 1
+    return my_map, ran_x, ran_y
+
+
+def distancebetweenpoints(ran_x, ran_y):
+    x1,x2=x[0],x[1]
+    y1,y2=y[0],y[1]
+    dist = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    return dist
 
 
 def mutate(parent):
@@ -50,14 +59,10 @@ R = 2000000/C
 
 # random number RRHs variable holders vector
 randomh = np.empty((6,6))
-
-
-def distancebetweenpoints(x,y):
-    x1,x2=x[0],x[1]
-    y1,y2=y[0],y[1]
-    dist = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-    return dist
-
+ran_x = np.random.randint(0, dimension, 6)
+ran_y = np.random.randint(0, dimension, 6)
+print(ran_x)
+print(ran_y)
 
 
 
