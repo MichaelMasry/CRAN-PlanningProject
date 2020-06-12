@@ -43,11 +43,11 @@ def mutate(parent):
 def rbs_calculate(distance):
     # Fitness Function
     # Power per Resource Block
-    s = 5 - (10 * mth.log10(25)) - (20 * mth.log10(2350000000)) - (10 * 3 * mth.log10(distance)) - (
-                6 * (distance / 5)) + 28
+    s = 5 - (10 * mth.log10(25)) + 30 + 30 - (20 * mth.log10(2350)) - (10 * 3 * mth.log10(distance)) - ((
+                6 * (distance / 5)) + 30) + 28
     # Rate per Resource Block
     n = (-174 + (10 * mth.log10(180000)))
-    c = 180000 * mth.log2(1 + mth.pow(10, ((s / n) / 10)))
+    c = 180000 * mth.log2(1 + mth.pow(10, ((s - n) / 10)))
     # Number of RBs
     r = 2000000 / c
     return r
@@ -70,6 +70,7 @@ my_map, user_x, user_y = map_40_by_40()
 actual_distance = distance_between_points(user_x, user_y)
 actual_distance = np.round(actual_distance, 2)
 rbs_for_each_user = rbs_matrix(actual_distance)
+print(actual_distance)
 print(rbs_for_each_user)
 plt.plot(user_x, user_y, 'gx')
 plt.plot(rrh_x, rrh_y, 'ro')
