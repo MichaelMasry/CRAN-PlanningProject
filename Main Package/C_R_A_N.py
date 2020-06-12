@@ -27,7 +27,7 @@ def distance_between_points(ran_x, ran_y):
             y1, y2 = ran_y[i], rrh_y[j]
             dist = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
             distance_helper[i][j] = dist
-    return distance_helper        # returns a matrix  of users with distance 2 each RRH
+    return distance_helper  # returns a matrix  of users with distance 2 each RRH
 
 
 def mutate(parent):
@@ -43,13 +43,21 @@ def mutate(parent):
 def rbs_calculate(distance):
     # Fitness Function
     # Power per Resource Block
-    S = 5 - 10 * mth.log10(25) - 20 * mth.log10(2350000000) - 10 * 3 * mth.log10(5) + 28 - 6 / 5
+    S = 5 - (10 * mth.log10(25)) - (20 * mth.log10(2350000000)) - (10 * 3 * mth.log10(distance)) - (6 / 5 * distance) + 28
     # Rate per Resource Block
     N = -174 + 10 * mth.log10(180000)
-    C = 180000 * mth.log2(1 + mth.pow(10, (S / N / 10)))
+    C = 180000 * mth.log2(1 + mth.pow(10, ((S / N) / 10)))
     # Number of RBs
     R = 2000000 / C
     return R
+
+
+def rbs_matrix(distances_matrix):
+    final_matrix = np.zeros((distances_matrix.shape[0], distances_matrix.shape[1]))
+    for user in range(distances_matrix.shape[0]):
+        for rrh in range(distances_matrix.shape[1]):
+            final_matrix[user][rrh] = rbs_calculate(distances_matrix[user][rrh])
+    return final_matrix
 
 
 users = 100
@@ -60,11 +68,10 @@ rrh_y = np.array([19, 38, 35, 21, 1, 0])
 my_map, user_x, user_y = map_40_by_40()
 actual_distance = distance_between_points(user_x, user_y)
 actual_distance = np.round(actual_distance, 2)
-print(actual_distance)
-resource_blocks = rbs_calculate(actual_distance)
-
+rbs_for_each_user = rbs_matrix(actual_distance)
+print(rbs_for_each_user)
 plt.plot(user_x, user_y, 'gx')
 plt.plot(rrh_x, rrh_y, 'ro')
 plt.title('Users and RRHs Map')
-plt.legend(('Users', 'RRHs'), loc= 1)
+plt.legend(('Users', 'RRHs'), loc=1)
 plt.show()
