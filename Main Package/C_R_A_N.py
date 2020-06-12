@@ -21,8 +21,8 @@ def map_40_by_40():
 
 def distance_between_points(ran_x, ran_y):
     for i in range(users):
-        distance_helper = np.zeros((users, 6))
-        for j in range(6):
+        distance_helper = np.zeros((users, radio_r_h))
+        for j in range(radio_r_h):
             x1, x2 = ran_x[i], rrh_x[j]
             y1, y2 = ran_y[i], rrh_y[j]
             dist = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
@@ -40,7 +40,7 @@ def mutate(parent):
     return out
 
 
-def evaluate(chromosome):
+def rbs_calculate(distance):
     # Fitness Function
     # Power per Resource Block
     S = 5 - 10 * mth.log10(25) - 20 * mth.log10(2350000000) - 10 * 3 * mth.log10(5) + 28 - 6 / 5
@@ -49,17 +49,17 @@ def evaluate(chromosome):
     C = 180000 * mth.log2(1 + mth.pow(10, (S / N / 10)))
     # Number of RBs
     R = 2000000 / C
-    print(chromosome)
+    return R
 
 
 users = 100
+radio_r_h = 6
 dimension = 40
 rrh_x = np.array([16, 15, 7, 27, 38, 9])
 rrh_y = np.array([19, 38, 35, 21, 1, 0])
 my_map, user_x, user_y = map_40_by_40()
-gamma = distance_between_points(user_x, user_y)
-print("Size of Gamma matrix is: ")
-print(np.shape(gamma))
+actual_distance = distance_between_points(user_x, user_y)
+resource_blocks = rbs_calculate(actual_distance)
 plt.plot(user_x, user_y, 'gx')
 plt.plot(rrh_x, rrh_y, 'ro')
 plt.title('Users and RRHs Map')
