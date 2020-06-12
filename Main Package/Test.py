@@ -1,6 +1,9 @@
-import cartesian as cartesian
+import itertools
 import numpy as np
 
-
-
-print(cartesian([1, 2, 3], [4, 5], [6, 7]))
+row_sum = 1
+col_sum = 2
+arr = np.arange(4)
+print(arr)
+np.random.shuffle(arr)
+print(arr)
