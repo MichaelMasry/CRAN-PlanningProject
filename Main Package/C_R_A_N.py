@@ -53,6 +53,7 @@ def rbs_calculate(distance):
     return r
 
 
+# Data
 users = 100
 radio_r_h = 6
 dimension = 40
@@ -68,15 +69,17 @@ user_y = np.array([27, 22, 32, 10, 17, 9, 22, 2, 30, 12, 12, 24, 35, 16, 39, 16,
                    8, 12, 30, 27, 1, 4, 23, 31, 30, 21, 22, 6, 34, 36, 30, 16, 22, 13, 4, 18])
 rrh_x = np.array([16, 15, 7, 27, 38, 9])
 rrh_y = np.array([19, 38, 35, 21, 1, 0])
-actual_distance = distance_between_points(user_x, user_y)
-actual_distance = np.round(actual_distance, 2)
-rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
-rbs_for_each_user = np.round(rbs_for_each_user, 2)
-print(rbs_for_each_user[0:5, ])
-# Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
-
+# Visualizing Data
 plt.plot(user_x, user_y, 'gx')
 plt.plot(rrh_x, rrh_y, 'ro')
 plt.title('Users and RRHs Map')
 plt.legend(('Users', 'RRHs'), loc=1)
-# plt.show()
+plt.show()
+
+# Initial Code
+actual_distance = distance_between_points(user_x, user_y)
+actual_distance = np.round(actual_distance, 2)
+rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
+rbs_for_each_user = np.round(rbs_for_each_user, 2)
+
+# Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
