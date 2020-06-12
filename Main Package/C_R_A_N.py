@@ -43,13 +43,14 @@ def mutate(parent):
 def rbs_calculate(distance):
     # Fitness Function
     # Power per Resource Block
-    S = 5 - (10 * mth.log10(25)) - (20 * mth.log10(2350000000)) - (10 * 3 * mth.log10(distance)) - (6 / 5 * distance) + 28
+    s = 5 - (10 * mth.log10(25)) - (20 * mth.log10(2350000000)) - (10 * 3 * mth.log10(distance)) - (
+                6 * (distance / 5)) + 28
     # Rate per Resource Block
-    N = -174 + 10 * mth.log10(180000)
-    C = 180000 * mth.log2(1 + mth.pow(10, ((S / N) / 10)))
+    n = (-174 + (10 * mth.log10(180000)))
+    c = 180000 * mth.log2(1 + mth.pow(10, ((s / n) / 10)))
     # Number of RBs
-    R = 2000000 / C
-    return R
+    r = 2000000 / c
+    return r
 
 
 def rbs_matrix(distances_matrix):
