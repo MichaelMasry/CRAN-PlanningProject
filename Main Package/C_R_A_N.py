@@ -27,16 +27,16 @@ def map_40_by_40():
 
 def distancebetweenpoints(ran_x, ran_y):
     for i in range(users):
-        distancehelper=np.zeros(6)
+        distancehelper=np.zeros((users,6))
         for j in range(6):
             x1,x2=ran_x[i],rrh_x[j]
             y1,y2=ran_y[i],rrh_y[j]
             dist = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-            distancehelper[j]=dist
-        whichrrh= distancehelper.index(min(distancehelper))
-        gamma[i,whichrrh]=1
+            distancehelper[i][j]=dist
+        # whichrrh= distancehelper.index(min(distancehelper))
+        # gamma[i,whichrrh]=1
 
-    return gamma
+    return distancehelper        # returns a matrix  of users with distance 2 each RRH
 
 
 def mutate(parent):
