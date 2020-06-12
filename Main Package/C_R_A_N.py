@@ -9,13 +9,14 @@ def crossover(part1, part2, position):
     return child1, child2
 
 
-# def map_40_by_40():
-#     m_map = np.zeros((dimension, dimension))
-#     ran_x = np.random.randint(0, dimension, users)
-#     ran_y = np.random.randint(0, dimension, users)
-#     for i in range(users):
-#         m_map[ran_x[i], ran_y[i]] = 1
-#     return m_map, ran_x, ran_y
+def mutate(parent):
+    x = np.random.randint(0, np.size(parent), 1)
+    out = np.copy(parent)
+    if out[x] == 0:
+        out[x] = 1
+    else:
+        out[x] = 0
+    return out
 
 
 def distance_between_points(ran_x, ran_y):
@@ -27,16 +28,6 @@ def distance_between_points(ran_x, ran_y):
             dist = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
             distance_helper[i][j] = dist
     return distance_helper  # returns a matrix  of users with distance 2 each RRH
-
-
-def mutate(parent):
-    x = np.random.randint(0, np.size(parent), 1)
-    out = np.copy(parent)
-    if out[x] == 0:
-        out[x] = 1
-    else:
-        out[x] = 0
-    return out
 
 
 def rbs_calculate(distance):
@@ -56,7 +47,6 @@ def rbs_calculate(distance):
 # Data
 users = 100
 radio_r_h = 6
-dimension = 40
 user_x = np.array([32, 16, 16, 17, 3, 28, 24, 37, 9, 37, 32, 5, 3, 33, 6, 23, 27, 5, 39, 29,
                    16, 11, 39, 39, 16, 13, 32, 4, 28, 11, 37, 15, 19, 19, 6, 14, 9, 19, 30, 26,
                    00, 38, 4, 0, 12, 31, 4, 17, 39, 35, 31, 11, 9, 36, 17, 35, 25, 9, 16, 10,
@@ -72,7 +62,7 @@ rrh_y = np.array([19, 38, 35, 21, 1, 0])
 # Visualizing Data
 plt.plot(user_x, user_y, 'gx')
 plt.plot(rrh_x, rrh_y, 'ro')
-plt.title('Users and RRHs Map')
+plt.title('40x40 Users and RRHs Map')
 plt.legend(('Users', 'RRHs'), loc=1)
 plt.show()
 
