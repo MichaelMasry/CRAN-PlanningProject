@@ -20,8 +20,8 @@ def map_40_by_40():
 
 
 def distance_between_points(ran_x, ran_y):
+    distance_helper = np.zeros((users, radio_r_h))
     for i in range(users):
-        distance_helper = np.zeros((users, radio_r_h))
         for j in range(radio_r_h):
             x1, x2 = ran_x[i], rrh_x[j]
             y1, y2 = ran_y[i], rrh_y[j]
@@ -59,7 +59,10 @@ rrh_x = np.array([16, 15, 7, 27, 38, 9])
 rrh_y = np.array([19, 38, 35, 21, 1, 0])
 my_map, user_x, user_y = map_40_by_40()
 actual_distance = distance_between_points(user_x, user_y)
+actual_distance = np.round(actual_distance, 2)
+print(actual_distance)
 resource_blocks = rbs_calculate(actual_distance)
+
 plt.plot(user_x, user_y, 'gx')
 plt.plot(rrh_x, rrh_y, 'ro')
 plt.title('Users and RRHs Map')
