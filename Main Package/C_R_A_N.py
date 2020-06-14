@@ -46,10 +46,17 @@ def rbs_calculate(distance):
 
 def total_rbs_check(connected_users, total_sys_capacity):
     total_rbs = connected_users.sum()
-    if total_rbs <= total_sys_capacity:
-        return True
-    else:
-        return False
+    return total_rbs <= total_sys_capacity
+
+
+def constrain_one_rrh_user(gamma):
+    temp = np.sum(gamma, axis=1)
+    return np.all(temp == 1)
+
+
+def check_2(res_block, q):
+    temp = np.sum(res_block, axis=0)
+    return np.all(temp <= q)
 
 
 # Data
@@ -83,12 +90,3 @@ print(rbs_for_each_user.sum())
 print(total_rbs_check(rbs_for_each_user, 1000))
 
 # Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
-
-def  constrain_One_RRH_User(gamma):
-    temp=np.sum(gamma,axis=1)
-    if(np.all(temp==1)):
-        return True
-    else:
-        return False
-
-
