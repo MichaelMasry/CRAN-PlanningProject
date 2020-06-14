@@ -83,3 +83,12 @@ print(rbs_for_each_user.sum())
 print(total_rbs_check(rbs_for_each_user, 1000))
 
 # Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
+
+def  constrain_One_RRH_User(gamma):
+    temp=np.sum(gamma,axis=1)
+    if(np.all(temp==1)):
+        return True
+    else:
+        return False
+
+
