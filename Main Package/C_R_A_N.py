@@ -44,6 +44,14 @@ def rbs_calculate(distance):
     return r
 
 
+def total_rbs_check(connected_users, total_sys_capacity):
+    total_rbs = connected_users.sum()
+    if total_rbs <= total_sys_capacity:
+        return True
+    else:
+        return False
+
+
 # Data
 users = 100
 radio_r_h = 6
@@ -71,5 +79,7 @@ actual_distance = distance_between_points(user_x, user_y)
 actual_distance = np.round(actual_distance, 2)
 rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
 rbs_for_each_user = np.round(rbs_for_each_user, 2)
+print(rbs_for_each_user.sum())
+print(total_rbs_check(rbs_for_each_user, 1000))
 
 # Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
