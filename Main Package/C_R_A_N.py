@@ -44,19 +44,34 @@ def rbs_calculate(distance):
     return r
 
 
+# Function checks that total RBs needed from the system check
 def total_rbs_check(connected_users, total_sys_capacity):
     total_rbs = connected_users.sum()
     return total_rbs <= total_sys_capacity, total_rbs
 
 
+# Function checks that One rrh for each user check
 def constrain_one_rrh_user(gamma):
     temp = np.sum(gamma, axis=1)
     return np.all(temp == 1)
 
 
+# Function checks that each rrh supply only q RBs
 def check_2(res_block, q):
     temp = np.sum(res_block, axis=0)
     return np.all(temp <= q)
+
+
+# Function checks that the inserted users RBs and Gamma satisfies all conditions/constraints
+def constraints_checker(gamma, rbs_matrix, q, total_sys_capacity):
+    first_constraint = constrain_one_rrh_user(gamma)
+    second_constraint = check_2(np.dot(gamma, rbs_matrix), q)
+    third_constraint, total_rbs = total_rbs_check(np.dot(gamma, rbs_matrix), total_sys_capacity)
+
+    if first_constraint & second_constraint & third_constraint:
+        return total_rbs
+    else:
+        return total_rbs * 10000
 
 
 # Data
