@@ -4,17 +4,18 @@ import math as mth
 import matplotlib.pyplot as plt
 
 def IntRandomGeneratorRowsGamma(num):
-    return np.random.randint(1,6,num)
+    return np.random.randint(0,6,num)
 def SinglePopulationgenerator(num):
     temp=np.zeros([num,6],int)
-    temprandom=IntRandomGeneratorRowsGamma(num)
     for i in range(num):
+        temprandom = IntRandomGeneratorRowsGamma(num)
         temp[i,temprandom[i]]=1
     return temp
 def Populationgenerator(users, numPopulation):    #this function returns all the Gammas generated refrences in an array
+    temparray=[]
     for i in range(numPopulation):
       temp=SinglePopulationgenerator(users)
-      temparray[i]=temp
+      temparray.append(temp)
     return  temparray
 
 def crossover(part1, part2, position):
