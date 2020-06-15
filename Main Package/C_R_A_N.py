@@ -16,10 +16,19 @@ def single_population_generator(num):
     return temp
 
 
+def refill(population, new_guy):
+    temp = np.empty(shape=(np.size(population)+1,), dtype=object)
+    for i in range(np.size(population)):
+        temp[i] = population[i]
+    temp[-1] = new_guy
+    return temp
+
+
 # this function returns all the Gammas generated references in an array
 def population_generator(users, num_population):
     temp = np.empty(shape=(num_population,), dtype=object)
     for i in range(num_population):
+        #np.append(temp, single_population_generator(users))
         temp[i] = single_population_generator(users)
     return temp
 
@@ -32,14 +41,15 @@ def crossover(part1, part2, position, users, rrh):
     return np.reshape(child1, (users, rrh)), np.reshape(child2, (users, rrh))
 
 
-def mutate(parent):
-    x = np.random.randint(0, np.size(parent), 1)
+def mutate(parent, users, rrh):
     out = np.copy(parent)
-    if out[x] == 0:
-        out[x] = 1
+    t = np.reshape(out, (1, users*rrh))
+    x = random.randint(0, users*rrh-1)
+    if t[0, x] == 0:
+        t[0, x] = 1
     else:
-        out[x] = 0
-    return out
+        t[0, x] = 0
+    return np.reshape(t, (users, rrh))
 
 
 def distance_between_points(ran_x, ran_y):
@@ -96,7 +106,7 @@ def evaluate_chromosome(gamma, rbs_matrix, q, total_sys_capacity):
 
 
 # Data
-users = 10
+users = 100
 remote_radio_h = 6
 Q = 25
 user_x = np.array([32, 16, 16, 17, 3, 28, 24, 37, 9, 37, 32, 5, 3, 33, 6, 23, 27, 5, 39, 29,
@@ -152,10 +162,10 @@ temp = pop_size
 for i in range((temp-t)//2):
     ra = random.randint(1, users*remote_radio_h)
     p1, p2 = crossover(population[i], population[-1-i], ra, users, remote_radio_h)
-    np.concatenate(population, p1)
-    np.concatenate(population, p2)
-    np.concatenate(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q*remote_radio_h))
-    np.concatenate(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q * remote_radio_h))
+    population = refill(population, p1)
+    population = refill(population, p1)
+    best_rbs = np.append(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q*remote_radio_h))
+    best_rbs = np.append(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q*remote_radio_h))
     pop_size += 2
     i += 1
 
@@ -164,7 +174,7 @@ temp = pop_size
 for i in range(temp):
     ra = random.randint(0, 100)
     if ra < mutation_percentage:
-        child = mutate(population[i])
-        np.concatenate(population, child)
-        np.concatenate(best_rbs, evaluate_chromosome(child, rbs_for_each_user, Q, Q * remote_radio_h))
+        child = mutate(population[i], users, remote_radio_h)
+        population = refill(population, child)
+        best_rbs = np.append(best_rbs, evaluate_chromosome(child, rbs_for_each_user, Q, Q*remote_radio_h))
         pop_size += 1
