@@ -183,3 +183,4 @@ for i in range(temp):
         best_rbs = np.append(best_rbs, evaluate_chromosome(child, rbs_for_each_user, Q, Q*remote_radio_h))
         pop_size += 1
 population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_radio_h)
+print(pop_size)
