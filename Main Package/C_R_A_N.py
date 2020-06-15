@@ -62,7 +62,7 @@ def check_2(res_block, q):
     return np.all(temp <= q)
 
 
-# Function checks that the inserted users RBs and Gamma satisfies all conditions/constraints
+# Function checks that the inserted users RBs and Gamma satisfies all constraints
 def constraints_checker(gamma, rbs_matrix, q, total_sys_capacity):
     first_constraint = constrain_one_rrh_user(gamma)
     second_constraint = check_2(np.dot(gamma, rbs_matrix), q)
