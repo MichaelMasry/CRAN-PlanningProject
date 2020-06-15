@@ -101,3 +101,9 @@ actual_distance = np.round(actual_distance, 2)
 rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
 rbs_for_each_user = np.round(rbs_for_each_user, 2)
 # Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
+# Genetic Algorithm
+crossover_percentage = 0.8
+pop_size = 1000
+mutation_percentage = 0.2
+elite = pop_size*0.4
+# Creating Population
