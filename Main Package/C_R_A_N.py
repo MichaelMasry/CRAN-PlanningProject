@@ -9,56 +9,55 @@ def int_random_generator_rows_gamma(num):
 
 
 def single_population_generator(num):
-    temp = np.zeros([num, 6], int)
-    for i in range(num):
+    tem = np.zeros([num, 6], int)
+    for each in range(num):
         temp_random = int_random_generator_rows_gamma(num)
-        temp[i, temp_random[i]]=1
-    return temp
+        tem[each, temp_random[each]] = 1
+    return tem
 
 
-def refill(population, new_guy):
-    temp = np.empty(shape=(np.size(population)+1,), dtype=object)
-    for i in range(np.size(population)):
-        temp[i] = population[i]
-    temp[-1] = new_guy
-    return temp
+def refill(pops, new_guy):
+    tem = np.empty(shape=(np.size(pops)+1,), dtype=object)
+    for each in range(np.size(pops)):
+        tem[each] = pops[each]
+    tem[-1] = new_guy
+    return tem
 
 
 # this function returns all the Gammas generated references in an array
-def population_generator(users, num_population):
-    temp = np.empty(shape=(num_population,), dtype=object)
-    for i in range(num_population):
-        #np.append(temp, single_population_generator(users))
-        temp[i] = single_population_generator(users)
-    return temp
+def population_generator(u, num_population):
+    tem = np.empty(shape=(num_population,), dtype=object)
+    for each in range(num_population):
+        tem[each] = single_population_generator(u)
+    return tem
 
 
-def crossover(part1, part2, position, users, rrh):
-    part1 = np.reshape(part1, (1, users*rrh))
-    part2 = np.reshape(part2, (1, users*rrh))
+def crossover(part1, part2, position, u, rrh):
+    part1 = np.reshape(part1, (1, u*rrh))
+    part2 = np.reshape(part2, (1, u*rrh))
     child1 = np.concatenate((part1[0, 0:position], part2[0, position:]))
     child2 = np.concatenate((part2[0, 0:position], part1[0, position:]))
-    return np.reshape(child1, (users, rrh)), np.reshape(child2, (users, rrh))
+    return np.reshape(child1, (u, rrh)), np.reshape(child2, (u, rrh))
 
 
-def mutate(parent, users, rrh):
+def mutate(parent, u, rrh):
     out = np.copy(parent)
-    t = np.reshape(out, (1, users*rrh))
-    x = random.randint(0, users*rrh-1)
-    if t[0, x] == 0:
-        t[0, x] = 1
+    tem = np.reshape(out, (1, u*rrh))
+    x = random.randint(0, u*rrh-1)
+    if tem[0, x] == 0:
+        tem[0, x] = 1
     else:
-        t[0, x] = 0
-    return np.reshape(t, (users, rrh))
+        tem[0, x] = 0
+    return np.reshape(tem, (u, rrh))
 
 
 def distance_between_points(ran_x, ran_y):
     distance_helper = np.zeros((users, remote_radio_h))
-    for i in range(users):
+    for each in range(users):
         for j in range(remote_radio_h):
-            x1, x2 = ran_x[i], rrh_x[j]
-            y1, y2 = ran_y[i], rrh_y[j]
-            distance_helper[i][j] = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+            x1, x2 = ran_x[each], rrh_x[j]
+            y1, y2 = ran_y[each], rrh_y[j]
+            distance_helper[each][j] = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
     return distance_helper  # returns a matrix  of users with distance 2 each RRH
 
 
@@ -72,8 +71,8 @@ def rbs_calculate(distance):
     n = (-174 + (10 * mth.log10(180000)))
     c = 180000 * mth.log2(1 + mth.pow(10, ((s - n) / 10)))
     # Number of RBs
-    r = 2000000 / c
-    return r
+    rate = 2000000 / c
+    return rate
 
 
 # Function checks that total RBs needed from the system check
@@ -84,14 +83,14 @@ def total_rbs_check(connected_users, total_sys_capacity):
 
 # Function checks that One rrh for each user check
 def constrain_one_rrh_user(gamma):
-    temp = np.sum(gamma, axis=1)
-    return np.all(temp == 1)
+    tem = np.sum(gamma, axis=1)
+    return np.all(tem == 1)
 
 
 # Function checks that each rrh supply only q RBs
 def check_2(res_block, q):
-    temp = np.sum(res_block, axis=0)
-    return np.all(temp <= q)
+    tem = np.sum(res_block, axis=0)
+    return np.all(tem <= q)
 
 
 # Function checks that the inserted users RBs and Gamma satisfies all constraints
@@ -103,6 +102,17 @@ def evaluate_chromosome(gamma, rbs_matrix, q, total_sys_capacity):
         return total_rbs
     else:
         return total_rbs * 1000
+
+
+def clean_and_sort(pops, rbs, q, remote):
+    pos = np.argsort(rbs)
+    rbs.sort()
+    nation = pops[pos]
+    e = np.where(rbs < q * remote + 1)
+    nation = nation[e]
+    _rbs = rbs[e]
+    size = np.size(nation)
+    return nation, _rbs, size
 
 
 # Data
@@ -122,12 +132,12 @@ user_y = np.array([27, 22, 32, 10, 17, 9, 22, 2, 30, 12, 12, 24, 35, 16, 39, 16,
 rrh_x = np.array([16, 15, 7, 27, 38, 9])
 rrh_y = np.array([19, 38, 35, 21, 1, 0])
 # Visualizing Data
-# plt.plot(user_x, user_y, 'gx')
-# plt.plot(rrh_x, rrh_y, 'ro')
-# plt.title('40x40 Users and RRHs Map')
-# plt.legend(('Users', 'RRHs'), loc=1)
+plt.plot(user_x, user_y, 'gx')
+plt.plot(rrh_x, rrh_y, 'ro')
+plt.title('40x40 Users and RRHs Map')
+plt.legend(('Users', 'RRHs'), loc=1)
 # plt.show()
-#
+
 # Initial Code
 actual_distance = distance_between_points(user_x, user_y)
 actual_distance = np.round(actual_distance, 2)
@@ -145,13 +155,7 @@ best_rbs = np.zeros(pop_size)
 # Evaluating and Sorting
 for i in range(pop_size):
     best_rbs[i] = evaluate_chromosome(population[i], rbs_for_each_user, Q, Q*remote_radio_h)
-pos = np.argsort(best_rbs)
-best_rbs.sort()
-population = population[pos]
-elite = np.where(best_rbs < Q*remote_radio_h+1)
-population = population[elite]
-best_rbs = best_rbs[elite]
-pop_size = np.size(population)
+population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_radio_h)
 
 # Crossover
 if pop_size % 2 == 0:
@@ -178,3 +182,4 @@ for i in range(temp):
         population = refill(population, child)
         best_rbs = np.append(best_rbs, evaluate_chromosome(child, rbs_for_each_user, Q, Q*remote_radio_h))
         pop_size += 1
+population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_radio_h)
