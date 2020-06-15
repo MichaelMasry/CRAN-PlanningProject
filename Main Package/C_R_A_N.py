@@ -1,6 +1,7 @@
 import numpy as np
 import math as mth
 import matplotlib.pyplot as plt
+import random
 
 
 def int_random_generator_rows_gamma(num):
@@ -23,10 +24,12 @@ def population_generator(users, num_population):
     return temp
 
 
-def crossover(part1, part2, position):
-    child1 = np.concatenate((part1[0:position], part2[position:]))
-    child2 = np.concatenate((part2[0:position], part1[position:]))
-    return child1, child2
+def crossover(part1, part2, position, users, rrh):
+    part1 = np.reshape(part1, (1, users*rrh))
+    part2 = np.reshape(part2, (1, users*rrh))
+    child1 = np.concatenate((part1[0, 0:position], part2[0, position:]))
+    child2 = np.concatenate((part2[0, 0:position], part1[0, position:]))
+    return np.reshape(child1, (users, rrh)), np.reshape(child2, (users, rrh))
 
 
 def mutate(parent):
@@ -93,7 +96,7 @@ def evaluate_chromosome(gamma, rbs_matrix, q, total_sys_capacity):
 
 
 # Data
-users = 100
+users = 10
 remote_radio_h = 6
 Q = 25
 user_x = np.array([32, 16, 16, 17, 3, 28, 24, 37, 9, 37, 32, 5, 3, 33, 6, 23, 27, 5, 39, 29,
@@ -122,9 +125,9 @@ rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
 rbs_for_each_user = np.round(rbs_for_each_user, 2)
 # Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
 # Genetic Algorithm
-crossover_percentage = 0.8
-pop_size = 100
-mutation_percentage = 0.2
+crossover_percentage = 80
+pop_size = 1000
+mutation_percentage = 20
 elite = pop_size*0.4
 # Creating Population
 population = population_generator(users, pop_size)
@@ -135,4 +138,33 @@ for i in range(pop_size):
 pos = np.argsort(best_rbs)
 best_rbs.sort()
 population = population[pos]
-print(best_rbs)
+elite = np.where(best_rbs < Q*remote_radio_h+1)
+population = population[elite]
+best_rbs = best_rbs[elite]
+pop_size = np.size(population)
+
+# Crossover
+if pop_size % 2 == 0:
+    t = 0
+else:
+    t = 1
+temp = pop_size
+for i in range((temp-t)//2):
+    ra = random.randint(1, users*remote_radio_h)
+    p1, p2 = crossover(population[i], population[-1-i], ra, users, remote_radio_h)
+    np.concatenate(population, p1)
+    np.concatenate(population, p2)
+    np.concatenate(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q*remote_radio_h))
+    np.concatenate(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q * remote_radio_h))
+    pop_size += 2
+    i += 1
+
+# Mutation
+temp = pop_size
+for i in range(temp):
+    ra = random.randint(0, 100)
+    if ra < mutation_percentage:
+        child = mutate(population[i])
+        np.concatenate(population, child)
+        np.concatenate(best_rbs, evaluate_chromosome(child, rbs_for_each_user, Q, Q * remote_radio_h))
+        pop_size += 1
