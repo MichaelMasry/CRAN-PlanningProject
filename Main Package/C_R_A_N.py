@@ -15,10 +15,11 @@ def single_population_generator(num):
     return temp
 
 
-def population_generator(users, num_Population):    #this function returns all the Gammas generated refrences in an array
-    temp=[]
-    for i in range(num_Population):
-        temp.append(single_population_generator(users))
+# this function returns all the Gammas generated references in an array
+def population_generator(users, num_population):
+    temp = np.empty(shape=(num_population,), dtype=object)
+    for i in range(num_population):
+        temp[i] = single_population_generator(users)
     return temp
 
 
@@ -39,9 +40,9 @@ def mutate(parent):
 
 
 def distance_between_points(ran_x, ran_y):
-    distance_helper = np.zeros((users, radio_r_h))
+    distance_helper = np.zeros((users, remote_radio_h))
     for i in range(users):
-        for j in range(radio_r_h):
+        for j in range(remote_radio_h):
             x1, x2 = ran_x[i], rrh_x[j]
             y1, y2 = ran_y[i], rrh_y[j]
             distance_helper[i][j] = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
@@ -93,7 +94,8 @@ def evaluate_chromosome(gamma, rbs_matrix, q, total_sys_capacity):
 
 # Data
 users = 100
-radio_r_h = 6
+remote_radio_h = 6
+Q = 25
 user_x = np.array([32, 16, 16, 17, 3, 28, 24, 37, 9, 37, 32, 5, 3, 33, 6, 23, 27, 5, 39, 29,
                    16, 11, 39, 39, 16, 13, 32, 4, 28, 11, 37, 15, 19, 19, 6, 14, 9, 19, 30, 26,
                    00, 38, 4, 0, 12, 31, 4, 17, 39, 35, 31, 11, 9, 36, 17, 35, 25, 9, 16, 10,
@@ -121,13 +123,16 @@ rbs_for_each_user = np.round(rbs_for_each_user, 2)
 # Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
 # Genetic Algorithm
 crossover_percentage = 0.8
-pop_size = 1000
+pop_size = 100
 mutation_percentage = 0.2
 elite = pop_size*0.4
 # Creating Population
-x = population_generator(100, 100000)
-for i in x:
-    y = evaluate_chromosome(i, rbs_for_each_user, 25, 150)
-    if y < 92:
-        print(y)
-        print(i)
+population = population_generator(users, pop_size)
+best_rbs = np.zeros(pop_size)
+# Evaluating and Sorting
+for i in range(pop_size):
+    best_rbs[i] = evaluate_chromosome(population[i], rbs_for_each_user, Q, Q*remote_radio_h)
+pos = np.argsort(best_rbs)
+best_rbs.sort()
+population = population[pos]
+print(best_rbs)
