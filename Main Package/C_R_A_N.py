@@ -63,11 +63,10 @@ def check_2(res_block, q):
 
 
 # Function checks that the inserted users RBs and Gamma satisfies all constraints
-def constraints_checker(gamma, rbs_matrix, q, total_sys_capacity):
+def evaluate_chromosome(gamma, rbs_matrix, q, total_sys_capacity):
     first_constraint = constrain_one_rrh_user(gamma)
-    second_constraint = check_2(np.dot(gamma, rbs_matrix), q)
+    second_constraint = check_2(np.multiply(gamma, rbs_matrix), q)
     third_constraint, total_rbs = total_rbs_check(np.dot(gamma, rbs_matrix), total_sys_capacity)
-
     if first_constraint & second_constraint & third_constraint:
         return total_rbs
     else:
