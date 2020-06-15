@@ -1,7 +1,21 @@
+
 import numpy as np
 import math as mth
 import matplotlib.pyplot as plt
 
+def IntRandomGeneratorRowsGamma(num):
+    return np.random.randint(1,6,num)
+def SinglePopulationgenerator(num):
+    temp=np.zeros([num,6],int)
+    temprandom=IntRandomGeneratorRowsGamma(num)
+    for i in range(num):
+        temp[i,temprandom[i]]=1
+    return temp
+def Populationgenerator(users, numPopulation):    #this function returns all the Gammas generated refrences in an array
+    for i in range(numPopulation):
+      temp=SinglePopulationgenerator(users)
+      temparray[i]=temp
+    return  temparray
 
 def crossover(part1, part2, position):
     child1 = np.concatenate((part1[0:position], part2[position:]))
@@ -89,21 +103,24 @@ user_y = np.array([27, 22, 32, 10, 17, 9, 22, 2, 30, 12, 12, 24, 35, 16, 39, 16,
 rrh_x = np.array([16, 15, 7, 27, 38, 9])
 rrh_y = np.array([19, 38, 35, 21, 1, 0])
 # Visualizing Data
-plt.plot(user_x, user_y, 'gx')
-plt.plot(rrh_x, rrh_y, 'ro')
-plt.title('40x40 Users and RRHs Map')
-plt.legend(('Users', 'RRHs'), loc=1)
-plt.show()
-
-# Initial Code
-actual_distance = distance_between_points(user_x, user_y)
-actual_distance = np.round(actual_distance, 2)
-rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
-rbs_for_each_user = np.round(rbs_for_each_user, 2)
-# Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
-# Genetic Algorithm
-crossover_percentage = 0.8
-pop_size = 1000
-mutation_percentage = 0.2
-elite = pop_size*0.4
+# plt.plot(user_x, user_y, 'gx')
+# plt.plot(rrh_x, rrh_y, 'ro')
+# plt.title('40x40 Users and RRHs Map')
+# plt.legend(('Users', 'RRHs'), loc=1)
+# plt.show()
+#
+# # Initial Code
+# actual_distance = distance_between_points(user_x, user_y)
+# actual_distance = np.round(actual_distance, 2)
+# rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
+# rbs_for_each_user = np.round(rbs_for_each_user, 2)
+# # Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
+# # Genetic Algorithm
+# crossover_percentage = 0.8
+# pop_size = 1000
+# mutation_percentage = 0.2
+# elite = pop_size*0.4
 # Creating Population
+x=Populationgenerator(6,6)
+print(x)
+
