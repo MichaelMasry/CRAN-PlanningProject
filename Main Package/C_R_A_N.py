@@ -1,22 +1,26 @@
-
 import numpy as np
 import math as mth
 import matplotlib.pyplot as plt
 
-def IntRandomGeneratorRowsGamma(num):
-    return np.random.randint(0,6,num)
-def SinglePopulationgenerator(num):
-    temp=np.zeros([num,6],int)
+
+def int_random_generator_rows_gamma(num):
+    return np.random.randint(0, 6, num)
+
+
+def single_population_generator(num):
+    temp = np.zeros([num, 6], int)
     for i in range(num):
-        temprandom = IntRandomGeneratorRowsGamma(num)
-        temp[i,temprandom[i]]=1
+        temp_random = int_random_generator_rows_gamma(num)
+        temp[i, temp_random[i]]=1
     return temp
-def Populationgenerator(users, numPopulation):    #this function returns all the Gammas generated refrences in an array
-    temparray=[]
-    for i in range(numPopulation):
-      temp=SinglePopulationgenerator(users)
-      temparray.append(temp)
-    return  temparray
+
+
+def population_generator(users, num_Population):    #this function returns all the Gammas generated refrences in an array
+    temp=[]
+    for i in range(num_Population):
+        temp.append(single_population_generator(users))
+    return temp
+
 
 def crossover(part1, part2, position):
     child1 = np.concatenate((part1[0:position], part2[position:]))
@@ -40,8 +44,7 @@ def distance_between_points(ran_x, ran_y):
         for j in range(radio_r_h):
             x1, x2 = ran_x[i], rrh_x[j]
             y1, y2 = ran_y[i], rrh_y[j]
-            dist = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-            distance_helper[i][j] = dist
+            distance_helper[i][j] = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
     return distance_helper  # returns a matrix  of users with distance 2 each RRH
 
 
@@ -81,11 +84,11 @@ def check_2(res_block, q):
 def evaluate_chromosome(gamma, rbs_matrix, q, total_sys_capacity):
     first_constraint = constrain_one_rrh_user(gamma)
     second_constraint = check_2(np.multiply(gamma, rbs_matrix), q)
-    third_constraint, total_rbs = total_rbs_check(np.dot(gamma, rbs_matrix), total_sys_capacity)
+    third_constraint, total_rbs = total_rbs_check(np.multiply(gamma, rbs_matrix), total_sys_capacity)
     if first_constraint & second_constraint & third_constraint:
         return total_rbs
     else:
-        return total_rbs * 10000
+        return total_rbs * 1000
 
 
 # Data
@@ -110,18 +113,21 @@ rrh_y = np.array([19, 38, 35, 21, 1, 0])
 # plt.legend(('Users', 'RRHs'), loc=1)
 # plt.show()
 #
-# # Initial Code
-# actual_distance = distance_between_points(user_x, user_y)
-# actual_distance = np.round(actual_distance, 2)
-# rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
-# rbs_for_each_user = np.round(rbs_for_each_user, 2)
-# # Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
-# # Genetic Algorithm
-# crossover_percentage = 0.8
-# pop_size = 1000
-# mutation_percentage = 0.2
-# elite = pop_size*0.4
+# Initial Code
+actual_distance = distance_between_points(user_x, user_y)
+actual_distance = np.round(actual_distance, 2)
+rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
+rbs_for_each_user = np.round(rbs_for_each_user, 2)
+# Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
+# Genetic Algorithm
+crossover_percentage = 0.8
+pop_size = 1000
+mutation_percentage = 0.2
+elite = pop_size*0.4
 # Creating Population
-x=Populationgenerator(6,6)
-print(x)
-
+x = population_generator(100, 100000)
+for i in x:
+    y = evaluate_chromosome(i, rbs_for_each_user, 25, 150)
+    if y < 92:
+        print(y)
+        print(i)
