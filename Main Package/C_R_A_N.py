@@ -2,6 +2,9 @@ import numpy as np
 import math as mth
 import matplotlib.pyplot as plt
 import random
+import sys
+sys.path.append('...')
+from Test.py import Table as plate
 
 
 def int_random_generator_rows_gamma(num):
