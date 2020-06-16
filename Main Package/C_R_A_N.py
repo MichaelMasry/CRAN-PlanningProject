@@ -157,30 +157,43 @@ for i in range(pop_size):
     best_rbs[i] = evaluate_chromosome(population[i], rbs_for_each_user, Q, Q*remote_radio_h)
 population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_radio_h)
 
-# Crossover
-if pop_size % 2 == 0:
-    t = 0
-else:
-    t = 1
-temp = pop_size
-for i in range((temp-t)//2):
-    ra = random.randint(1, users*remote_radio_h)
-    p1, p2 = crossover(population[i], population[-1-i], ra, users, remote_radio_h)
-    population = refill(population, p1)
-    population = refill(population, p1)
-    best_rbs = np.append(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q*remote_radio_h))
-    best_rbs = np.append(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q*remote_radio_h))
-    pop_size += 2
-    i += 1
+best_so_far = best_rbs[0]
+counter = 0
+ending = 6
 
-# Mutation
-temp = pop_size
-for i in range(temp):
-    ra = random.randint(0, 100)
-    if ra < mutation_percentage:
-        child = mutate(population[i], users, remote_radio_h)
-        population = refill(population, child)
-        best_rbs = np.append(best_rbs, evaluate_chromosome(child, rbs_for_each_user, Q, Q*remote_radio_h))
-        pop_size += 1
-population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_radio_h)
-print(pop_size)
+while counter < ending:
+
+    # Crossover
+    if pop_size % 2 == 0:
+        t = 0
+    else:
+        t = 1
+    temp = pop_size
+    for i in range((temp-t)//2):
+        ra = random.randint(1, users*remote_radio_h)
+        p1, p2 = crossover(population[i], population[-1-i], ra, users, remote_radio_h)
+        population = refill(population, p1)
+        population = refill(population, p1)
+        best_rbs = np.append(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q*remote_radio_h))
+        best_rbs = np.append(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q*remote_radio_h))
+        pop_size += 2
+        i += 1
+
+    # Mutation
+    temp = pop_size
+    for i in range(temp):
+        ra = random.randint(0, 100)
+        if ra < mutation_percentage:
+            child = mutate(population[i], users, remote_radio_h)
+            population = refill(population, child)
+            best_rbs = np.append(best_rbs, evaluate_chromosome(child, rbs_for_each_user, Q, Q*remote_radio_h))
+            pop_size += 1
+    # Evaluate
+    population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_radio_h)
+    print(pop_size)
+    if best_so_far > best_rbs[0]:
+        best_so_far = best_rbs[0]
+        counter = 0
+    else:
+        counter += 1
+        print(counter)
