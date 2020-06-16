@@ -2,9 +2,7 @@ import numpy as np
 import math as mth
 import matplotlib.pyplot as plt
 import random
-import sys
-sys.path.append('...')
-from Test.py import Table as plate
+from termcolor import colored
 
 
 def int_random_generator_rows_gamma(num):
@@ -29,9 +27,11 @@ def refill(pops, new_guy):
 
 # this function returns all the Gammas generated references in an array
 def population_generator(u, num_population):
-    tem = np.empty(shape=(num_population,), dtype=object)
+    tem = np.empty(shape=(num_population +2,), dtype=object)
     for each in range(num_population):
         tem[each] = single_population_generator(u)
+    tem[-2] = good_array
+    tem[-1] = good_array2
     return tem
 
 
@@ -119,6 +119,56 @@ def clean_and_sort(pops, rbs, q, remote):
 
 
 # Data
+good_array = np.array([[0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 1], [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1],
+                 [1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1], [0, 0, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0],
+                 [0, 0, 1, 0, 0, 0], [0, 0, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0],
+                 [0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 1, 0], [0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 1, 0],
+                 [0, 0, 0, 1, 0, 0], [0, 0, 1, 0, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 1, 0],
+                 [0, 0, 0, 0, 1, 0], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0], [0, 0, 0, 1, 0, 0],
+                 [1, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1], [0, 0, 1, 0, 0, 0],
+                 [0, 0, 1, 0, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 1, 0], [0, 0, 0, 0, 0, 1],
+                 [0, 0, 0, 0, 0, 1], [0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0],
+                 [0, 0, 0, 0, 0, 1], [0, 0, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1],
+                 [0, 0, 0, 0, 0, 1], [0, 0, 0, 1, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 1], [0, 0, 0, 1, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 0, 1, 0, 0],
+                 [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0], [0, 1, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 1, 0], [0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 1, 0],
+                 [0, 0, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 1],
+                 [0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0],
+                 [0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 1, 0], [0, 0, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 1], [0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 1, 0], [1, 0, 0, 0, 0, 0],
+                 [0, 0, 1, 0, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 1, 0], [0, 0, 0, 1, 0, 0],
+                 [0, 1, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0], [1, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 1], [0, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+                 [1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0],
+                 [0, 0, 0, 0, 0, 1], [0, 0, 1, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0],
+                 [0, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+                 [0, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0]])
+good_array2 = np.array([[1, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0],
+                  [1, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0],
+                  [1, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+                  [1, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 1, 0, 0, 0], [0, 0, 1, 0, 0, 0],
+                  [0, 0, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0], [0, 0, 1, 0, 0, 0],
+                  [1, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1],
+                  [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0], [1, 0, 0, 0, 0, 0],
+                  [0, 0, 1, 0, 0, 0], [0, 0, 1, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0],
+                  [0, 0, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0],
+                  [0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0],
+                  [0, 0, 1, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1], [0, 0, 1, 0, 0, 0],
+                  [1, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0],
+                  [0, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 1, 0],
+                  [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0],
+                  [1, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+                  [0, 0, 1, 0, 0, 0], [0, 0, 1, 0, 0, 0], [0, 0, 1, 0, 0, 0], [0, 1, 0, 0, 0, 0],
+                  [0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 1], [0, 0, 1, 0, 0, 0], [0, 0, 0, 1, 0, 0],
+                  [0, 0, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1],
+                  [0, 0, 0, 0, 0, 1], [1, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0],
+                  [1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1], [0, 1, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 1], [0, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0],
+                  [1, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 0, 1, 0, 0],
+                  [1, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0]])
 users = 100
 remote_radio_h = 6
 Q = 25
@@ -146,6 +196,7 @@ actual_distance = distance_between_points(user_x, user_y)
 actual_distance = np.round(actual_distance, 2)
 rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
 rbs_for_each_user = np.round(rbs_for_each_user, 2)
+
 # Till Here We are Ready for both LOCAL SEARCH and GENETIC ALGORITHM
 # Genetic Algorithm
 crossover_percentage = 80
@@ -153,7 +204,7 @@ pop_size = 1000
 mutation_percentage = 20
 elite = pop_size*0.4
 # Creating Population
-population = population_generator(users, pop_size)
+population = population_generator(users, pop_size-2)
 best_rbs = np.zeros(pop_size)
 # Evaluating and Sorting
 for i in range(pop_size):
@@ -163,24 +214,20 @@ population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_
 best_so_far = best_rbs[0]
 counter = 0
 ending = 6
-
 while counter < ending:
 
     # Crossover
-    if pop_size % 2 == 0:
-        t = 0
-    else:
-        t = 1
     temp = pop_size
-    for i in range((temp-t)//2):
+    for i in range(temp//2):
         ra = random.randint(1, users*remote_radio_h)
-        p1, p2 = crossover(population[i], population[-1-i], ra, users, remote_radio_h)
+        r1 = random.randint(1, pop_size-1)
+        r2 = random.randint(1, pop_size-1)
+        p1, p2 = crossover(population[r1], population[r2], ra, users, remote_radio_h)
         population = refill(population, p1)
         population = refill(population, p1)
         best_rbs = np.append(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q*remote_radio_h))
         best_rbs = np.append(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q*remote_radio_h))
         pop_size += 2
-        i += 1
 
     # Mutation
     temp = pop_size
@@ -193,10 +240,11 @@ while counter < ending:
             pop_size += 1
     # Evaluate
     population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_radio_h)
-    print(pop_size)
     if best_so_far > best_rbs[0]:
         best_so_far = best_rbs[0]
         counter = 0
     else:
         counter += 1
         print(counter)
+print(colored("The Best Solution has : ", 'green'))
+print(colored(best_rbs[0], 'green'))
