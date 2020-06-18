@@ -113,6 +113,7 @@ class Table:
                   [1, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 0, 1, 0, 0],
                   [1, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0], [0, 0, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0]])
     print(test2.shape)
+
 # K = 2
 # N = 3
 # x = [np.reshape(np.array(i), (K, N)) for i in itertools.product([0, 1], repeat=K * N)]
@@ -135,3 +136,7 @@ class Table:
 # c1, c2 = crossover(a1,a2,4)
 # print(c1)
 # print(c2)
+
+
+
+

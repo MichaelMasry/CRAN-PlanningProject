@@ -105,6 +105,31 @@ def evaluate_chromosome(gamma, rbs_matrix, q, total_sys_capacity):
         return total_rbs
     else:
         return total_rbs * 1000
+def swapbits(bit):
+    if bit==0:
+        return 1
+    else:
+        return 0
+
+def int_random_generator_rows_gamma(num):
+    return np.random.randint(0, 6, num)
+
+
+def single_population_generator(num):
+    tem = np.zeros([num, 6], int)
+    for each in range(num):
+        temp_random = int_random_generator_rows_gamma(num)
+        tem[each, temp_random[each]] = 1
+    return tem
+
+def getnextneighborcombinations(k):
+     neighborcombinations= np.empty(shape=(np.size(k),), dtype=object)
+
+     for i in range(np.size(k)):
+         temp = np.reshape(k, (1, np.size(k)))
+         temp[i]=swapbits(temp[i])
+         neighborcombinations[i]=temp
+     return neighborcombinations
 
 
 def clean_and_sort(pops, rbs, q, remote):
