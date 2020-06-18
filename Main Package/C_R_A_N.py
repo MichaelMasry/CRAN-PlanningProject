@@ -110,18 +110,6 @@ def swapbits(bit):
         return 1
     else:
         return 0
-
-def int_random_generator_rows_gamma(num):
-    return np.random.randint(0, 6, num)
-
-
-def single_population_generator(num):
-    tem = np.zeros([num, 6], int)
-    for each in range(num):
-        temp_random = int_random_generator_rows_gamma(num)
-        tem[each, temp_random[each]] = 1
-    return tem
-
 def getnextneighborcombinations(k):
      neighborcombinations= np.empty(shape=(np.size(k),), dtype=object)
 
