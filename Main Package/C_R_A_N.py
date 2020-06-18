@@ -105,18 +105,21 @@ def evaluate_chromosome(gamma, rbs_matrix, q, total_sys_capacity):
         return total_rbs
     else:
         return total_rbs * 1000
-def swapbits(bit):
-    if bit==0:
+
+
+def swap_bits(bit):
+    if bit == 0:
         return 1
     else:
         return 0
+
+
 def getnextneighborcombinations(k):
      neighborcombinations= np.empty(shape=(np.size(k),), dtype=object)
-
      for i in range(np.size(k)):
          temp = np.reshape(k, (1, np.size(k)))
-         temp[i]=swapbits(temp[i])
-         neighborcombinations[i]=temp
+         temp[i] = swap_bits(temp[i])
+         neighborcombinations[i] = temp
      return neighborcombinations
 
 
