@@ -189,5 +189,4 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
 
 
 # Test
-
 genetic_algorithm(100, user_x, user_y, 6, rrh_x, rrh_y, 25)
