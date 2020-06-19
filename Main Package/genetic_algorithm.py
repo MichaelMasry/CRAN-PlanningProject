@@ -97,7 +97,7 @@ def clean_and_sort(pops, rbs, q, remote, eli):
     if size > eli:
         nation = nation[0: int(eli)]
         _rbs = rbs[0: int(eli)]
-        size = eli
+        size = int(eli)
     return nation, _rbs, size
 
 
@@ -129,7 +129,7 @@ rrh_y = np.array([19, 38, 35, 21, 1, 0])
 def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rrh_y, Q):
     pop_size = 1000
     mutation_percentage = 20
-    elite = 0.2*pop_size
+    elite = 0.4*pop_size
 
     def distance_between_points(ran_x, ran_y):
         distance_helper = np.zeros((number_of_users, remote_radio_h))
@@ -186,11 +186,12 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
             counter = 0
         else:
             counter += 1
-            print(counter)
-            print(pop_size)
-            print(best_so_far)
+            print("Lap: " + str(counter))
+            print("pop size: " + str(pop_size))
+            print("min rbs found: " + str(np.round(best_so_far, 2)))
+            print('-----------------------')
     print(colored("The Best Solution has : ", 'green'))
-    print(colored(best_rbs[0], 'green'))
+    print(colored(np.round(best_so_far, 2), 'green'))
 
 
 # Test
