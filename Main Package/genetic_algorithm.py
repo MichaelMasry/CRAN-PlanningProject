@@ -206,21 +206,21 @@ def local_search(u, user_x, user_y, rrh, rrh_x, rrh_y, Q, num_population):
         # Create its neighbours
         n = get_neighbor_combinations(pop[i])
         n = refill(n, pop[i])
-        print(np.all(n[-1] == pop[0]))
-        print(n[5])
         best_rbs = np.zeros(n.size)
         for j in range(n.size):
-            # total system capacity = Q* remote_radio_h
             best_rbs[j] = evaluate_chromosome(n[j], rbs_for_each_user, Q, Q * rrh)
-        print(np.any(best_rbs < 150))
         population, best_rbs, pop_size = clean_and_sort(n, best_rbs, Q, rrh, 1)
-        print(best_rbs)
-        if len(best_rbs) != 0 & best_rbs[0] < the_best_ever:
-            the_best_ever = best_rbs[0]
-            the_best_gamma = population[0]
+        if best_rbs.size != 0:
+            if best_rbs[0] < the_best_ever:
+                the_best_ever = best_rbs[0]
+                the_best_gamma = population[0]
         else:
             the_best_ever = 1
-            print('failed')
+        tenth = num_population//10
+        if i % tenth == 0:
+            program_count = i // 10
+            print(colored(str(program_count) + " % completed", 'green'))
+    print(colored("100 % completed", 'green'))
     return the_best_ever, the_best_gamma
 
 
@@ -242,6 +242,10 @@ rrh = 6
 users = 100  # Array 100,150,200,250,....
 Q = 25
 GA_stopping_cond = 8
-# x = genetic_algorithm(users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, GA_stopping_cond)
-t = local_search(users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, ls_pop)
-print(t)
+# x, gamma = genetic_algorithm(users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, GA_stopping_cond)
+t, gamma = local_search(users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, ls_pop)
+if t == 1:
+    print('Local Search Failed')
+else:
+    print(colored("The Best Solution has Min Total RBs: ", 'green'))
+    print(colored(np.round(t, 2), 'green'))

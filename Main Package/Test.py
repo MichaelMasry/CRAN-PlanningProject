@@ -1,27 +1,20 @@
 import numpy as np
-from _collections import deque
 
 
-def shift_bit(array, direction):
-    items = deque(array)
-    items.rotate(direction)
-    return items
+def single_population_generator(num, rrh):
+    tem = np.zeros([num, rrh], int)
+    for each in range(num):
+        temp_random = np.random.randint(0, rrh, num)
+        tem[each, temp_random[each]] = 1
+    return tem
 
 
-def get_neighbor_combinations(k):
-    size = (np.size(k, 1) - 1) * np.size(k, 0)
-    neighbor_combinations = np.empty(shape=(size,), dtype=object)
-    count = 0
-    for i in range(np.size(k, 0)):
-        temp = k.copy()
-        for j in range(np.size(k, 1)-1):
-            temp[i] = shift_bit(temp[i], 1)
-            neighbor_combinations[count] = temp.copy()
-            count += 1
-    return neighbor_combinations
+def population_generator(u, num_population, rrh):
+    tem = np.empty(shape=(num_population,), dtype=object)
+    for each in range(num_population):
+        tem[each] = single_population_generator(u, rrh)
+    return tem
 
 
-aaa = np.arange(600).reshape(100, 6)
-a = np.array([[0, 1, 0], [0, 1, 0], [0, 1, 0]])
-r = get_neighbor_combinations(aaa)
-print(r[5])
+a = population_generator(100, 500000, 6)
+print(a.size)
