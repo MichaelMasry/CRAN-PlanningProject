@@ -9,11 +9,19 @@ def int_random_generator_rows_gamma(num):
     return np.random.randint(0, 6, num)
 
 
-def single_population_generator(num):
-    tem = np.zeros([num, 6], int)
+def single_population_generator(num, rrh):
+    tem = np.zeros([num, rrh], int)
     for each in range(num):
-        temp_random = int_random_generator_rows_gamma(num)
+        temp_random = np.random.randint(0, rrh, num)
         tem[each, temp_random[each]] = 1
+    return tem
+
+
+# this function returns all the Gammas generated references in an array
+def population_generator(u, num_population, rrh):
+    tem = np.empty(shape=(num_population + 2,), dtype=object)
+    for each in range(num_population):
+        tem[each] = single_population_generator(u, rrh)
     return tem
 
 
@@ -22,16 +30,6 @@ def refill(pops, new_guy):
     for each in range(np.size(pops)):
         tem[each] = pops[each]
     tem[-1] = new_guy
-    return tem
-
-
-# this function returns all the Gammas generated references in an array
-def population_generator(u, num_population):
-    tem = np.empty(shape=(num_population + 2,), dtype=object)
-    for each in range(num_population):
-        tem[each] = single_population_generator(u)
-    tem[-2] = good_array
-    tem[-1] = good_array2
     return tem
 
 
@@ -115,17 +113,18 @@ def swap_bits(bit):
 
 
 def get_neighbor_combinations(k):
+    old_shape = k.shape
     neighbor_combinations = np.empty(shape=(np.size(k),), dtype=object)
     for i in range(np.size(k)):
         temp = k.copy()
         temp = np.reshape(temp, (1, np.size(k)))
         temp[0, i] = swap_bits(temp[0, i])
+        temp = np.reshape(temp, old_shape)
         neighbor_combinations[i] = temp
     return neighbor_combinations
 
 
-
-def clean_and_sort(pops, rbs, q, remote):
+def clean_and_sort(pops, rbs, q, remote, eli):
     pos = np.argsort(rbs)
     rbs.sort()
     nation = pops[pos]
@@ -133,6 +132,10 @@ def clean_and_sort(pops, rbs, q, remote):
     nation = nation[e]
     _rbs = rbs[e]
     size = np.size(nation)
+    if size > eli:
+        nation = nation[0: int(eli)]
+        _rbs = rbs[0: int(eli)]
+        size = int(eli)
     return nation, _rbs, size
 
 

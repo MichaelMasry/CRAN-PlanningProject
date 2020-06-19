@@ -23,23 +23,18 @@ def mutate(parent, u, rrh):
     return np.reshape(tem, (u, rrh))
 
 
-# def int_random_generator_rows_gamma(num):
-#     return np.random.randint(0, 6, num)
-
-
-def single_population_generator(num):
-    tem = np.zeros([num, 6], int)
+def single_population_generator(num, rrh):
+    tem = np.zeros([num, rrh], int)
     for each in range(num):
-        temp_random = np.random.randint(0, 6, num)
+        temp_random = np.random.randint(0, rrh, num)
         tem[each, temp_random[each]] = 1
     return tem
 
 
-# this function returns all the Gammas generated references in an array
-def population_generator(u, num_population):
-    tem = np.empty(shape=(num_population + 2,), dtype=object)
+def population_generator(u, num_population, rrh):
+    tem = np.empty(shape=(num_population,), dtype=object)
     for each in range(num_population):
-        tem[each] = single_population_generator(u)
+        tem[each] = single_population_generator(u, rrh)
     return tem
 
 
@@ -109,42 +104,45 @@ def refill(pops, new_guy):
     return tem
 
 
-user_x = np.array([32, 16, 16, 17, 3, 28, 24, 37, 9, 37, 32, 5, 3, 33, 6, 23, 27, 5, 39, 29,
-                   16, 11, 39, 39, 16, 13, 32, 4, 28, 11, 37, 15, 19, 19, 6, 14, 9, 19, 30, 26,
-                   00, 38, 4, 0, 12, 31, 4, 17, 39, 35, 31, 11, 9, 36, 17, 35, 25, 9, 16, 10,
-                   37, 19, 17, 3, 31, 15, 13, 3, 3, 30, 23, 18, 7, 21, 2, 34, 7, 15, 21, 36,
-                   5, 23, 34, 20, 39, 3, 32, 20, 30, 0, 39, 19, 26, 31, 13, 24, 9, 25, 9, 0])
-user_y = np.array([27, 22, 32, 10, 17, 9, 22, 2, 30, 12, 12, 24, 35, 16, 39, 16, 15, 16, 23, 23,
-                   6, 8, 36, 25, 18, 16, 8, 14, 35, 19, 39, 24, 15, 31, 21, 8, 13, 18, 27, 3,
-                   2, 10, 36, 30, 26, 17, 26, 19, 24, 19, 33, 28, 39, 21, 32, 23, 16, 31, 1, 14,
-                   19, 17, 20, 15, 14, 2, 34, 25, 7, 24, 17, 38, 21, 14, 17, 1, 15, 1, 28, 4,
-                   8, 12, 30, 27, 1, 4, 23, 31, 30, 21, 22, 6, 34, 36, 30, 16, 22, 13, 4, 18])
-rrh_x = np.array([16, 15, 7, 27, 38, 9])
-rrh_y = np.array([19, 38, 35, 21, 1, 0])
+def swap_bits(bit):
+    if bit == 0:
+        return 1
+    else:
+        return 0
 
 
-# Genetic Algorithm
-# Creating Population
+def get_neighbor_combinations(k):
+    old_shape = k.shape
+    neighbor_combinations = np.empty(shape=(np.size(k),), dtype=object)
+    for i in range(np.size(k)):
+        temp = k.copy()
+        temp = np.reshape(temp, (1, np.size(k)))
+        temp[0, i] = swap_bits(temp[0, i])
+        temp = np.reshape(temp, old_shape)
+        neighbor_combinations[i] = temp
+    return neighbor_combinations
 
-def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rrh_y, Q):
+
+def distance_between_points(u, rrh, ran_x, ran_y, rrh_x, rrh_y):
+    distance_helper = np.zeros((u, rrh))
+    for each in range(u):
+        for j in range(rrh):
+            x1, x2 = ran_x[each], rrh_x[j]
+            y1, y2 = ran_y[each], rrh_y[j]
+            distance_helper[each][j] = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    return distance_helper  # returns a matrix  of users with distance 2 each RRH
+
+
+def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rrh_y, Q, stopping_cond):
     pop_size = 1000
     mutation_percentage = 20
     elite = 0.4*pop_size
 
-    def distance_between_points(ran_x, ran_y):
-        distance_helper = np.zeros((number_of_users, remote_radio_h))
-        for each in range(number_of_users):
-            for j in range(remote_radio_h):
-                x1, x2 = ran_x[each], rrh_x[j]
-                y1, y2 = ran_y[each], rrh_y[j]
-                distance_helper[each][j] = np.math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-        return distance_helper  # returns a matrix  of users with distance 2 each RRH
-
-    actual_distance = distance_between_points(user_x, user_y)
+    actual_distance = distance_between_points(number_of_users, remote_radio_h, user_x, user_y, rrh_x, rrh_y)
     actual_distance = np.round(actual_distance, 2)
     rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
     rbs_for_each_user = np.round(rbs_for_each_user, 2)
-    population = population_generator(number_of_users, pop_size)
+    population = population_generator(number_of_users, pop_size, remote_radio_h)
     best_rbs = np.zeros(pop_size)
     # Evaluating and Sorting
     for i in range(pop_size):
@@ -154,7 +152,7 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
 
     best_so_far = best_rbs[0]
     counter = 0
-    ending = 6
+    ending = stopping_cond
     while counter < ending:
 
         # Crossover
@@ -190,9 +188,59 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
             print("pop size: " + str(pop_size))
             print("min rbs found: " + str(np.round(best_so_far, 2)))
             print('-----------------------')
-    print(colored("The Best Solution has : ", 'green'))
+    print(colored("The Best Solution has Min Total RBs: ", 'green'))
     print(colored(np.round(best_so_far, 2), 'green'))
+    return best_so_far, population[0]
+
+
+def local_search(u, user_x, user_y, rrh, rrh_x, rrh_y, Q, num_population):
+    actual_distance = distance_between_points(u, rrh, user_x, user_y, rrh_x, rrh_y)
+    actual_distance = np.round(actual_distance, 2)
+    rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
+    rbs_for_each_user = np.round(rbs_for_each_user, 2)
+    pop = population_generator(u, num_population, rrh)
+    the_best_ever = 500000
+    the_best_gamma = pop[0]
+    for i in range(pop.size):
+        # Create its neighbours
+        n = get_neighbor_combinations(pop[i])
+        n = refill(n, pop[i])
+        print(np.all(n[-1] == pop[0]))
+        print(n[5])
+        best_rbs = np.zeros(n.size)
+        for j in range(n.size):
+            # total system capacity = Q* remote_radio_h
+            best_rbs[j] = evaluate_chromosome(n[j], rbs_for_each_user, Q, Q * rrh)
+        print(np.any(best_rbs < 150))
+        population, best_rbs, pop_size = clean_and_sort(n, best_rbs, Q, rrh, 1)
+        print(best_rbs)
+        if len(best_rbs) != 0 & best_rbs[0] < the_best_ever:
+            the_best_ever = best_rbs[0]
+            the_best_gamma = population[0]
+        else:
+            the_best_ever = 1
+            print('failed')
+    return the_best_ever, the_best_gamma
 
 
 # Test
-genetic_algorithm(100, user_x, user_y, 6, rrh_x, rrh_y, 25)
+user_x = np.array([32, 16, 16, 17, 3, 28, 24, 37, 9, 37, 32, 5, 3, 33, 6, 23, 27, 5, 39, 29,
+                   16, 11, 39, 39, 16, 13, 32, 4, 28, 11, 37, 15, 19, 19, 6, 14, 9, 19, 30, 26,
+                   00, 38, 4, 0, 12, 31, 4, 17, 39, 35, 31, 11, 9, 36, 17, 35, 25, 9, 16, 10,
+                   37, 19, 17, 3, 31, 15, 13, 3, 3, 30, 23, 18, 7, 21, 2, 34, 7, 15, 21, 36,
+                   5, 23, 34, 20, 39, 3, 32, 20, 30, 0, 39, 19, 26, 31, 13, 24, 9, 25, 9, 0])
+user_y = np.array([27, 22, 32, 10, 17, 9, 22, 2, 30, 12, 12, 24, 35, 16, 39, 16, 15, 16, 23, 23,
+                   6, 8, 36, 25, 18, 16, 8, 14, 35, 19, 39, 24, 15, 31, 21, 8, 13, 18, 27, 3,
+                   2, 10, 36, 30, 26, 17, 26, 19, 24, 19, 33, 28, 39, 21, 32, 23, 16, 31, 1, 14,
+                   19, 17, 20, 15, 14, 2, 34, 25, 7, 24, 17, 38, 21, 14, 17, 1, 15, 1, 28, 4,
+                   8, 12, 30, 27, 1, 4, 23, 31, 30, 21, 22, 6, 34, 36, 30, 16, 22, 13, 4, 18])
+rrh_x = np.array([16, 15, 7, 27, 38, 9])
+rrh_y = np.array([19, 38, 35, 21, 1, 0])
+ls_pop = 1000
+rrh = 6
+users = 100  # Array 100,150,200,250,....
+Q = 25
+GA_stopping_cond = 8
+# x = genetic_algorithm(users, user_x, user_y, rrh, rrh_x, rrh_y, Q, GA_stopping_cond)
+t = local_search(users, user_x, user_y, rrh, rrh_x, rrh_y, Q, ls_pop)
+print(t)
