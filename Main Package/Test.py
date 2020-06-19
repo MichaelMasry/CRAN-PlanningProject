@@ -135,3 +135,23 @@ class Table:
 # c1, c2 = crossover(a1,a2,4)
 # print(c1)
 # print(c2)
+def clean_and_sort(pops, rbs, q, remote, eli):
+    pos = np.argsort(rbs)
+    rbs.sort()
+    nation = pops[pos]
+    e = np.where(rbs < q * remote + 1)
+    nation = nation[e]
+    _rbs = rbs[e]
+    size = np.size(nation)
+    if size > eli:
+        nation = nation[0:eli]
+        _rbs = rbs[0:eli]
+        size = eli
+    return nation, _rbs, size
+
+a = np.array([0,1,2,3,4,5,6,7,8,9])
+r = np.array([0,1,2,3,4,5,6,7,8,9])
+aa,bb,cc = clean_and_sort(a, r, 5, 9, 9)
+print(aa)
+print(bb)
+print(cc)

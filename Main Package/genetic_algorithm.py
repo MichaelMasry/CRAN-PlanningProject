@@ -23,14 +23,14 @@ def mutate(parent, u, rrh):
     return np.reshape(tem, (u, rrh))
 
 
-def int_random_generator_rows_gamma(num):
-    return np.random.randint(0, 6, num)
+# def int_random_generator_rows_gamma(num):
+#     return np.random.randint(0, 6, num)
 
 
 def single_population_generator(num):
     tem = np.zeros([num, 6], int)
     for each in range(num):
-        temp_random = int_random_generator_rows_gamma(num)
+        temp_random = np.random.randint(0, 6, num)
         tem[each, temp_random[each]] = 1
     return tem
 
@@ -86,7 +86,7 @@ def rbs_calculate(distance):
     return rate
 
 
-def clean_and_sort(pops, rbs, q, remote):
+def clean_and_sort(pops, rbs, q, remote, eli):
     pos = np.argsort(rbs)
     rbs.sort()
     nation = pops[pos]
@@ -94,6 +94,10 @@ def clean_and_sort(pops, rbs, q, remote):
     nation = nation[e]
     _rbs = rbs[e]
     size = np.size(nation)
+    if size > eli:
+        nation = nation[0: int(eli)]
+        _rbs = rbs[0: int(eli)]
+        size = eli
     return nation, _rbs, size
 
 
@@ -125,8 +129,7 @@ rrh_y = np.array([19, 38, 35, 21, 1, 0])
 def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rrh_y, Q):
     pop_size = 1000
     mutation_percentage = 20
-    elite = pop_size * 0.4
-    crossover_percentage = 80
+    elite = 0.2*pop_size
 
     def distance_between_points(ran_x, ran_y):
         distance_helper = np.zeros((number_of_users, remote_radio_h))
@@ -147,7 +150,7 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
     for i in range(pop_size):
         # total system capacity = Q* remote_radio_h
         best_rbs[i] = evaluate_chromosome(population[i], rbs_for_each_user, Q, Q * remote_radio_h)
-    population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_radio_h)
+    population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_radio_h, elite)
 
     best_so_far = best_rbs[0]
     counter = 0
@@ -177,13 +180,15 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
                 best_rbs = np.append(best_rbs, evaluate_chromosome(child, rbs_for_each_user, Q, Q * remote_radio_h))
                 pop_size += 1
         # Evaluate
-        population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_radio_h)
+        population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_radio_h, elite)
         if best_so_far > best_rbs[0]:
             best_so_far = best_rbs[0]
             counter = 0
         else:
             counter += 1
             print(counter)
+            print(pop_size)
+            print(best_so_far)
     print(colored("The Best Solution has : ", 'green'))
     print(colored(best_rbs[0], 'green'))
 

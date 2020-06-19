@@ -114,13 +114,15 @@ def swap_bits(bit):
         return 0
 
 
-def getnextneighborcombinations(k):
-     neighborcombinations= np.empty(shape=(np.size(k),), dtype=object)
-     for i in range(np.size(k)):
-         temp = np.reshape(k, (1, np.size(k)))
-         temp[i] = swap_bits(temp[i])
-         neighborcombinations[i] = temp
-     return neighborcombinations
+def get_neighbor_combinations(k):
+    neighbor_combinations = np.empty(shape=(np.size(k),), dtype=object)
+    for i in range(np.size(k)):
+        temp = k.copy()
+        temp = np.reshape(temp, (1, np.size(k)))
+        temp[0, i] = swap_bits(temp[0, i])
+        neighbor_combinations[i] = temp
+    return neighbor_combinations
+
 
 
 def clean_and_sort(pops, rbs, q, remote):
