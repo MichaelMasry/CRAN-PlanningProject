@@ -24,3 +24,4 @@ def get_neighbor_combinations(k):
 aaa = np.arange(600).reshape(100, 6)
 a = np.array([[0, 1, 0], [0, 1, 0], [0, 1, 0]])
 r = get_neighbor_combinations(aaa)
+print(r[5])
