@@ -16,5 +16,5 @@ def population_generator(u, num_population, rrh):
     return tem
 
 
-a = population_generator(100, 500000, 6)
+a = population_generator(100, 5000, 6)
 print(a.size)
