@@ -1,22 +1,24 @@
 import numpy as np
 
-random_indices = np.random.randint(0, 6, 2000)
+
+def array_2_gamma(arr, u, rrh):
+    gamma = np.empty(shape=(u, rrh))
+    for i in range(np.size(arr, 0)):
+        temp = np.zeros((1, rrh))
+        temp[0][arr[i]] = 1
+        gamma[i, :] = temp[0]
+    return gamma
 
 
-def indices_to_gamma(indices):
-    splitting_factor = indices.size / 100
-    splitted_indices = np.split(indices, splitting_factor)
-    final_gammas = []
-    for array in splitted_indices:
-        gamma = np.zeros((100, 6))
-        i = 0
-        for user in gamma:
-            index_of_connected_node = array[i]
-            user[index_of_connected_node] = 1
-            i += 1
-        final_gammas.append(gamma)
-    return final_gammas
+def local_search(indices, factor, rrh):
+    splitting_factor = indices.size / int(factor)
+    split_arrays = np.split(indices, splitting_factor)
+    for array in split_arrays:
+        gamma = array_2_gamma(array, factor, rrh)
+
+    return 0
 
 
-# test
-print(indices_to_gamma(random_indices))
+print('Thanks')
+x = np.array([2,1,0,0,2])
+print(array_2_gamma(x, 5, 3))

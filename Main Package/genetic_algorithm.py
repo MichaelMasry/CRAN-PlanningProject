@@ -3,6 +3,7 @@ import math as mth
 import random
 from termcolor import colored
 from _collections import deque
+import matplotlib.pyplot as plt
 
 
 def crossover(part1, part2, position, u, rrh):
@@ -132,6 +133,15 @@ def get_neighbor_combinations(k):
     return neighbor_combinations
 
 
+def array_2_gamma(arr, u, rrh):
+    gamma = np.empty(shape=(u, rrh))
+    for i in range(np.size(arr, 0)):
+        temp = np.zeros((1, rrh))
+        temp[0][arr[i]] = 1
+        gamma[i, :] = temp[0]
+    return gamma
+
+
 def distance_between_points(u, rrh, ran_x, ran_y, rrh_x, rrh_y):
     distance_helper = np.zeros((u, rrh))
     for each in range(u):
@@ -203,33 +213,29 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
     return best_so_far, population[0]
 
 
-def local_search(u, user_x, user_y, rrh, rrh_x, rrh_y, Q, num_population):
+def local_search(population, u, user_x, user_y, rrh, rrh_x, rrh_y, Q, num_population):
     actual_distance = distance_between_points(u, rrh, user_x, user_y, rrh_x, rrh_y)
     actual_distance = np.round(actual_distance, 2)
     rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
     rbs_for_each_user = np.round(rbs_for_each_user, 2)
-    pop = population_generator(u, num_population, rrh)
-    the_best_ever = 500000
-    the_best_gamma = pop[0]
-    for i in range(pop.size):
-        # Create its neighbours
-        n = get_neighbor_combinations(pop[i])
-        n = refill(n, pop[i])
-        best_rbs = np.zeros(n.size)
-        for j in range(n.size):
-            best_rbs[j] = evaluate_chromosome(n[j], rbs_for_each_user, Q, Q * rrh)
-        population, best_rbs, pop_size = clean_and_sort(n, best_rbs, Q, rrh, 1)
-        if best_rbs.size != 0:
-            if best_rbs[0] < the_best_ever:
-                the_best_ever = best_rbs[0]
-                the_best_gamma = population[0]
-        else:
-            the_best_ever = 1
-        tenth = num_population//10
+    the_best_ever = 5000000
+    the_best_gamma = None
+    split_arrays = np.split(population, population.size / int(u))
+    i = 0
+    for array in split_arrays:
+        gamma = array_2_gamma(array, u, rrh)
+        rbs_assumed = evaluate_chromosome(gamma, rbs_for_each_user, Q, Q * rrh)
+        if rbs_assumed < the_best_ever:
+            the_best_ever = rbs_assumed
+            the_best_gamma = gamma
+        tenth = population.size//(10 * u)
         if i % tenth == 0:
             program_count = i // 10
-            print(colored(str(program_count) + " % completed", 'green'))
+            print(colored(str(program_count) + " % completed", 'red'))
+        i += 1
     print(colored("100 % completed", 'green'))
+    print(colored("The Best Solution has Min Total RBs: ", 'green'))
+    print(colored(np.round(the_best_ever, 2), 'green'))
     return the_best_ever, the_best_gamma
 
 
@@ -252,9 +258,10 @@ users = 100  # Array 100,150,200,250,....
 Q = 25
 GA_stopping_cond = 8
 x, gamma = genetic_algorithm(users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, GA_stopping_cond)
-# t, gamma = local_search(users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, ls_pop)
-# if t == 1:
-#     print('Local Search Failed')
-# else:
-#     print(colored("The Best Solution has Min Total RBs: ", 'green'))
-#     print(colored(np.round(t, 2), 'green'))
+rand_arr = np.random.randint(0, rrh, 100000)
+t, gamma = local_search(rand_arr, users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, ls_pop)
+plt.plot(users, x, 'gx')
+plt.plot(users, t, 'ro')
+plt.title('40x40 Users and RRHs Map')
+plt.legend(('Users', 'RRHs'), loc=1)
+plt.show()
