@@ -1,6 +1,6 @@
 import numpy as np
 from _collections import deque
-
+import random
 def swap_bits(bit):
     if bit == 0:
         return 1
@@ -26,16 +26,15 @@ def get_neighbor_combinations(k):
     return neighbor_combinations
 
 
-a = np.array([[0, 1, 0], [0, 1, 0], [0, 1, 0]])
+def mutate(parent):
+    out = np.copy(parent)
+    x = random.randint(0, np.size(out, 0)-1)
+    ra = random.randint(0, np.size(out, 1)-1)
+    z = np.zeros(np.size(out, 1))
+    z[ra] = 1
+    out[x] = z
+    return out
+
+a = np.arange(600).reshape((100, 6))
 # print(a)
-# print("###########################################################################################")
-r = get_neighbor_combinations(a)
-print("###########################################################################################")
-print(r)
-# print(r)
-# print(np.size(a,0),np.size(a,0))
-# for i in range(np.size(a,0)):
-#     for j in range(np.size(a,0)-1):
-#         a[i]=shiftbit(a[i],1)
-#
-# print(a)
+print(mutate(a))

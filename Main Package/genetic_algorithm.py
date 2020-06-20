@@ -13,15 +13,23 @@ def crossover(part1, part2, position, u, rrh):
     return np.reshape(child1, (u, rrh)), np.reshape(child2, (u, rrh))
 
 
-def mutate(parent, u, rrh):
+# def mutate(parent, u, rrh):
+#     out = np.copy(parent)
+#     tem = np.reshape(out, (1, u * rrh))
+#     x = random.randint(0, u * rrh - 1)
+#     if tem[0, x] == 0:
+#         tem[0, x] = 1
+#     else:
+#         tem[0, x] = 0
+#     return np.reshape(tem, (u, rrh))
+def mutate(parent):
     out = np.copy(parent)
-    tem = np.reshape(out, (1, u * rrh))
-    x = random.randint(0, u * rrh - 1)
-    if tem[0, x] == 0:
-        tem[0, x] = 1
-    else:
-        tem[0, x] = 0
-    return np.reshape(tem, (u, rrh))
+    x = random.randint(0, np.size(out, 0)-1)
+    ra = random.randint(0, np.size(out, 1)-1)
+    z = np.zeros(np.size(out, 1))
+    z[ra] = 1
+    out[x] = z
+    return out
 
 
 def single_population_generator(num, rrh):
@@ -174,7 +182,7 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
         for i in range(temp):
             ra = random.randint(0, 100)
             if ra < mutation_percentage:
-                child = mutate(population[i], number_of_users, remote_radio_h)
+                child = mutate(population[i])
                 population = refill(population, child)
                 best_rbs = np.append(best_rbs, evaluate_chromosome(child, rbs_for_each_user, Q, Q * remote_radio_h))
                 pop_size += 1
@@ -242,10 +250,10 @@ rrh = 6
 users = 100  # Array 100,150,200,250,....
 Q = 25
 GA_stopping_cond = 8
-# x, gamma = genetic_algorithm(users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, GA_stopping_cond)
-t, gamma = local_search(users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, ls_pop)
-if t == 1:
-    print('Local Search Failed')
-else:
-    print(colored("The Best Solution has Min Total RBs: ", 'green'))
-    print(colored(np.round(t, 2), 'green'))
+x, gamma = genetic_algorithm(users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, GA_stopping_cond)
+# t, gamma = local_search(users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, ls_pop)
+# if t == 1:
+#     print('Local Search Failed')
+# else:
+#     print(colored("The Best Solution has Min Total RBs: ", 'green'))
+#     print(colored(np.round(t, 2), 'green'))
