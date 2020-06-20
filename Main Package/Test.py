@@ -26,15 +26,9 @@ def get_neighbor_combinations(k):
     return neighbor_combinations
 
 
-def mutate(parent):
-    out = np.copy(parent)
-    x = random.randint(0, np.size(out, 0)-1)
-    ra = random.randint(0, np.size(out, 1)-1)
-    z = np.zeros(np.size(out, 1))
-    z[ra] = 1
-    out[x] = z
-    return out
-
-a = np.arange(600).reshape((100, 6))
-# print(a)
-print(mutate(a))
+w = np.random.randint(0, 6, 500000000)
+print(w.shape)
+y = np.random.randint(0, 6, 500000000)
+print(y.shape)
+z = np.random.randint(0, 6, 500000000)
+print(z.shape)
