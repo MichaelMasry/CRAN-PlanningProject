@@ -213,7 +213,7 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
     return best_so_far, population[0]
 
 
-def local_search(population, u, user_x, user_y, rrh, rrh_x, rrh_y, Q, num_population):
+def local_search(population, u, user_x, user_y, rrh, rrh_x, rrh_y, Q):
     actual_distance = distance_between_points(u, rrh, user_x, user_y, rrh_x, rrh_y)
     actual_distance = np.round(actual_distance, 2)
     rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
@@ -252,16 +252,15 @@ _user_y = np.array([27, 22, 32, 10, 17, 9, 22, 2, 30, 12, 12, 24, 35, 16, 39, 16
                    8, 12, 30, 27, 1, 4, 23, 31, 30, 21, 22, 6, 34, 36, 30, 16, 22, 13, 4, 18])
 _rrh_x = np.array([16, 15, 7, 27, 38, 9])
 _rrh_y = np.array([19, 38, 35, 21, 1, 0])
-ls_pop = 10
 rrh = 6
 users = 100  # Array 100,150,200,250,....
 Q = 25
 GA_stopping_cond = 8
 x, gamma = genetic_algorithm(users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, GA_stopping_cond)
 rand_arr = np.random.randint(0, rrh, 100000)
-t, gamma = local_search(rand_arr, users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, ls_pop)
-plt.plot(users, x, 'gx')
-plt.plot(users, t, 'ro')
-plt.title('40x40 Users and RRHs Map')
-plt.legend(('Users', 'RRHs'), loc=1)
+t, gamma = local_search(rand_arr, users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q)
+plt.plot(users, x, 'og')
+plt.plot(users, t, 'xr')
+plt.title('Genetic Algorithm vs Local Search')
+plt.legend(('GA', 'LS'), loc=1)
 plt.show()
