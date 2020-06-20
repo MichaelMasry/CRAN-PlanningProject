@@ -146,11 +146,12 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
     pop_size = 1000
     mutation_percentage = 20
     elite = 0.4*pop_size
-
+    print(colored("Starting GA Algorithm....", 'blue'))
     actual_distance = distance_between_points(number_of_users, remote_radio_h, user_x, user_y, rrh_x, rrh_y)
     actual_distance = np.round(actual_distance, 2)
     rbs_for_each_user = np.vectorize(rbs_calculate)(actual_distance)
     rbs_for_each_user = np.round(rbs_for_each_user, 2)
+    print(colored("Generating Population....", 'blue'))
     population = population_generator(number_of_users, pop_size, remote_radio_h)
     best_rbs = np.zeros(pop_size)
     # Evaluating and Sorting
@@ -158,7 +159,7 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
         # total system capacity = Q* remote_radio_h
         best_rbs[i] = evaluate_chromosome(population[i], rbs_for_each_user, Q, Q * remote_radio_h)
     population, best_rbs, pop_size = clean_and_sort(population, best_rbs, Q, remote_radio_h, elite)
-
+    print(colored("Crossover and Mutation....", 'blue'))
     best_so_far = best_rbs[0]
     counter = 0
     ending = stopping_cond
