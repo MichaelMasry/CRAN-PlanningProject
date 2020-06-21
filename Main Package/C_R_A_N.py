@@ -269,3 +269,4 @@ while counter < ending:
         print(counter)
 print(colored("The Best Solution has : ", 'green'))
 print(colored(best_rbs[0], 'green'))
+# print(best_rbs)
