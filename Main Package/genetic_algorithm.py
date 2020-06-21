@@ -233,13 +233,12 @@ def local_search(population, u, user_x, user_y, rrh, rrh_x, rrh_y, Q):
     return the_best_ever, the_best_gamma
 
 
-# Test
+# Main
 map_edge = 40
 _rrh_x = np.array([16, 15,  7, 27, 38, 9, 29, 13, 35, 21])
 _rrh_y = np.array([19, 38, 35, 21,  1, 0, 12,  8, 29, 32])
 rrh = 10
 users = np.array([50, 75, 100, 150, 200, 250, 300])  # Array 100,150,200,250,....
-# users = np.array([150])
 Q = 35
 GA_stopping_cond = 8
 ga = np.empty(shape=users.shape)
@@ -247,7 +246,7 @@ ls = np.empty(shape=users.shape)
 for i in range(np.size(users)):
     _user_x = np.random.randint(0, map_edge, users[i])
     _user_y = np.random.randint(0, map_edge, users[i])
-    rand_arr = np.random.randint(0, rrh, 15000000)
+    rand_arr = np.random.randint(0, rrh, 1500000)
     ls[i], gamma_ls = local_search(rand_arr, users[i], _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q)
     ga[i], gamma_ga = genetic_algorithm(users[i], _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, GA_stopping_cond)
 # visual
