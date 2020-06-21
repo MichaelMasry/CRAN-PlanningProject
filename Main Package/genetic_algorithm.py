@@ -95,14 +95,16 @@ def clean_and_sort(pops, rbs, q, remote, eli):
     pos = np.argsort(rbs)
     rbs.sort()
     nation = pops[pos]
-    e = np.where(rbs < q * remote + 1)
-    nation = nation[e]
-    _rbs = rbs[e]
-    size = np.size(nation)
-    if size > eli:
+    tmp = np.copy(nation)
+    tmp2 = rbs[0]
+    if np.size(nation) > eli:
         nation = nation[0: int(eli)]
         _rbs = rbs[0: int(eli)]
         size = int(eli)
+    #else:
+    #    nation = np.array([[tmp]])
+    #    _rbs = np.array([tmp2])
+    #    size = 1
     return nation, _rbs, size
 
 
@@ -153,9 +155,9 @@ def distance_between_points(u, rrh, ran_x, ran_y, rrh_x, rrh_y):
 
 
 def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rrh_y, Q, stopping_cond):
-    pop_size = 1000
+    pop_size = 5000
     mutation_percentage = 20
-    elite = 0.4*pop_size
+    elite = 0.2*pop_size
     print(colored("Starting GA Algorithm....", 'blue'))
     actual_distance = distance_between_points(number_of_users, remote_radio_h, user_x, user_y, rrh_x, rrh_y)
     actual_distance = np.round(actual_distance, 2)
@@ -174,7 +176,6 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
     counter = 0
     ending = stopping_cond
     while counter < ending:
-
         # Crossover
         temp = pop_size
         for i in range(temp // 2):
@@ -187,7 +188,6 @@ def genetic_algorithm(number_of_users, user_x, user_y, remote_radio_h, rrh_x, rr
             best_rbs = np.append(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q * remote_radio_h))
             best_rbs = np.append(best_rbs, evaluate_chromosome(p1, rbs_for_each_user, Q, Q * remote_radio_h))
             pop_size += 2
-
         # Mutation
         temp = pop_size
         for i in range(temp):
@@ -221,18 +221,12 @@ def local_search(population, u, user_x, user_y, rrh, rrh_x, rrh_y, Q):
     the_best_ever = 5000000
     the_best_gamma = None
     split_arrays = np.split(population, population.size / int(u))
-    i = 0
     for array in split_arrays:
         gamma = array_2_gamma(array, u, rrh)
         rbs_assumed = evaluate_chromosome(gamma, rbs_for_each_user, Q, Q * rrh)
         if rbs_assumed < the_best_ever:
             the_best_ever = rbs_assumed
             the_best_gamma = gamma
-        tenth = population.size//(10 * u)
-        if i % tenth == 0:
-            program_count = i // 10
-            print(colored(str(program_count) + " % completed", 'red'))
-        i += 1
     print(colored("100 % completed", 'green'))
     print(colored("The Best Solution has Min Total RBs: ", 'green'))
     print(colored(np.round(the_best_ever, 2), 'green'))
@@ -240,27 +234,30 @@ def local_search(population, u, user_x, user_y, rrh, rrh_x, rrh_y, Q):
 
 
 # Test
-_user_x = np.array([32, 16, 16, 17, 3, 28, 24, 37, 9, 37, 32, 5, 3, 33, 6, 23, 27, 5, 39, 29,
-                   16, 11, 39, 39, 16, 13, 32, 4, 28, 11, 37, 15, 19, 19, 6, 14, 9, 19, 30, 26,
-                   00, 38, 4, 0, 12, 31, 4, 17, 39, 35, 31, 11, 9, 36, 17, 35, 25, 9, 16, 10,
-                   37, 19, 17, 3, 31, 15, 13, 3, 3, 30, 23, 18, 7, 21, 2, 34, 7, 15, 21, 36,
-                   5, 23, 34, 20, 39, 3, 32, 20, 30, 0, 39, 19, 26, 31, 13, 24, 9, 25, 9, 0])
-_user_y = np.array([27, 22, 32, 10, 17, 9, 22, 2, 30, 12, 12, 24, 35, 16, 39, 16, 15, 16, 23, 23,
-                   6, 8, 36, 25, 18, 16, 8, 14, 35, 19, 39, 24, 15, 31, 21, 8, 13, 18, 27, 3,
-                   2, 10, 36, 30, 26, 17, 26, 19, 24, 19, 33, 28, 39, 21, 32, 23, 16, 31, 1, 14,
-                   19, 17, 20, 15, 14, 2, 34, 25, 7, 24, 17, 38, 21, 14, 17, 1, 15, 1, 28, 4,
-                   8, 12, 30, 27, 1, 4, 23, 31, 30, 21, 22, 6, 34, 36, 30, 16, 22, 13, 4, 18])
-_rrh_x = np.array([16, 15, 7, 27, 38, 9])
-_rrh_y = np.array([19, 38, 35, 21, 1, 0])
-rrh = 6
-users = 100  # Array 100,150,200,250,....
-Q = 25
+map_edge = 40
+_rrh_x = np.array([16, 15,  7, 27, 38, 9, 29, 13, 35, 21])
+_rrh_y = np.array([19, 38, 35, 21,  1, 0, 12,  8, 29, 32])
+rrh = 10
+users = np.array([50, 75, 100, 150, 200, 250, 300])  # Array 100,150,200,250,....
+# users = np.array([150])
+Q = 35
 GA_stopping_cond = 8
-x, gamma = genetic_algorithm(users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, GA_stopping_cond)
-rand_arr = np.random.randint(0, rrh, 100000)
-t, gamma = local_search(rand_arr, users, _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q)
-plt.plot(users, x, 'og')
-plt.plot(users, t, 'xr')
+ga = np.empty(shape=users.shape)
+ls = np.empty(shape=users.shape)
+for i in range(np.size(users)):
+    _user_x = np.random.randint(0, map_edge, users[i])
+    _user_y = np.random.randint(0, map_edge, users[i])
+    rand_arr = np.random.randint(0, rrh, 15000000)
+    ls[i], gamma_ls = local_search(rand_arr, users[i], _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q)
+    ga[i], gamma_ga = genetic_algorithm(users[i], _user_x, _user_y, rrh, _rrh_x, _rrh_y, Q, GA_stopping_cond)
+# visual
+ls[np.where(ls > Q*rrh)] = Q*rrh+6
+ga[np.where(ga > Q*rrh)] = Q*rrh+1
+plt.plot(users, ga, 'og')
+plt.plot(users, ls, 'xb')
+plt.hlines(Q*rrh, users[0], users[-1], colors='r', label=' Max Limit')
 plt.title('Genetic Algorithm vs Local Search')
 plt.legend(('GA', 'LS'), loc=1)
+plt.xlabel('Number of Users')
+plt.ylabel('Min RBs Found(max='+str(Q*rrh)+')')
 plt.show()
